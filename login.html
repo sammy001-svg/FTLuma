@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | FTLuma Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 450px;
+            padding: 3rem;
+            text-align: center;
+        }
+        .auth-header {
+            margin: 2rem 0;
+        }
+        .auth-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .auth-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        .auth-form {
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .input-wrapper {
+            position: relative;
+        }
+        .input-wrapper i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+        .input-wrapper input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            border-radius: var(--border-radius-md);
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-family: inherit;
+            outline: none;
+            transition: border-color var(--transition-fast);
+        }
+        .input-wrapper input:focus {
+            border-color: var(--color-primary);
+        }
+        .auth-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+        .forgot-link {
+            color: var(--color-primary);
+        }
+        .btn-block {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .auth-footer {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: var(--color-accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="blob-bg blob-1"></div>
+    <div class="blob-bg blob-2"></div>
+
+    <main class="auth-page">
+        <div class="container auth-container">
+            <div class="auth-card glass-panel fade-in">
+                <a href="index.html" class="logo">FTLuma<span class="dot">.</span></a>
+                <div class="auth-header">
+                    <h1>Admin Login</h1>
+                    <p>Enter your credentials to access the dashboard</p>
+                </div>
+                <form id="login-form" class="auth-form" onsubmit="handleAuthSumbit(event)">
+                    <div class="input-group">
+                        <label for="username">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="ph ph-envelope"></i>
+                            <input type="email" id="username" placeholder="admin@ftluma.com" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <i class="ph ph-lock"></i>
+                            <input type="password" id="password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    <div class="auth-actions">
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember">
+                            <label for="remember">Remember me</label>
+                        </div>
+                        <a href="#" class="forgot-link">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Login to Dashboard <i class="ph ph-arrow-right"></i>
+                    </button>
+                </form>
+                <div class="auth-footer">
+                    <p>Secure authentication managed by Supabase Auth.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        async function handleAuthSumbit(e) {
+            e.preventDefault();
+            const email = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const submitBtn = e.target.querySelector('button');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Authenticating...';
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+
+            if (error) {
+                alert('Authentication failed: ' + error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Login to Dashboard <i class="ph ph-arrow-right"></i>';
+            } else {
+                window.location.href = 'admin.html';
+            }
+        }
+    </script>
+</body>
+</html>

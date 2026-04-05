@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FTLuma | Articles Library</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="blob-bg blob-1"></div><div class="blob-bg blob-2"></div><div class="blob-bg blob-3"></div>
+    
+    <!-- Top Header -->
+    <div class="top-header">
+      <div class="container top-header-content">
+        <ul class="top-header-links">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="disclaimer.html">Disclaimer</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="index.html#more">More <i class="ph ph-caret-down"></i></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass-effect">
+      <div class="container nav-content">
+        <a href="index.html" class="logo">FTLuma<span class="dot">.</span></a>
+
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="articles.html" class="active">Articles</a></li>
+          <li><a href="topics.html">Topics</a></li>
+          <li><a href="events.html">Upcoming Events</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button class="icon-btn theme-toggle" aria-label="Toggle dark mode">
+            <i class="ph ph-sun"></i>
+          </button>
+          <button class="btn btn-primary subscribe-trigger">Subscribe</button>
+          <button class="icon-btn mobile-menu-btn d-none" aria-label="Open menu">
+            <i class="ph ph-list"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <section class="section-padding fade-in">
+        <header class="articles-header text-center-max-800">
+          <span class="tag">Knowledge Hub</span>
+          <h1 class="hero-title">Global Insights Library</h1>
+          <p class="section-subtitle">A curated collection of deep dives, market analysis, and transformative perspectives on the future of wealth.</p>
+          
+          <div class="filter-container">
+            <div class="filter-bar">
+              <button class="filter-chip active">All Insights</button>
+              <button class="filter-chip">Digital Finance</button>
+              <button class="filter-chip">Wealth Management</button>
+              <button class="filter-chip">Market Strategy</button>
+              <button class="filter-chip">Tech Trends</button>
+            </div>
+          </div>
+        </header>
+
+        <div class="articles-hub-grid">
+            <!-- Article 1 -->
+            <article class="post-card glass-panel">
+              <div class="post-image">
+                <img src="images/post-1.png" alt="Digital Finance" />
+                <span class="post-tag">Finance</span>
+              </div>
+              <div class="post-content">
+                <div class="post-meta">
+                  <span><i class="ph ph-calendar"></i> May 15, 2026</span>
+                  <span><i class="ph ph-timer"></i> 8 min read</span>
+                </div>
+                <h3><a href="post-1.html">The Future of Digital Finance: Beyond the Horizon</a></h3>
+                <p>Exploring the intersection of legacy banking systems and the emerging decentralized world of distributed ledgers.</p>
+                <div class="post-footer">
+                  <div class="post-author">
+                    <span>Marcus Chen</span>
+                  </div>
+                  <a href="post-1.html" class="read-more">Read More <i class="ph ph-arrow-right"></i></a>
+                </div>
+              </div>
+            </article>
+  
+            <!-- Article 2 -->
+            <article class="post-card glass-panel">
+              <div class="post-image">
+                <img src="images/post-2.png" alt="Wealth Management" />
+                <span class="post-tag">Strategy</span>
+              </div>
+              <div class="post-content">
+                <div class="post-meta">
+                  <span><i class="ph ph-calendar"></i> May 12, 2026</span>
+                  <span><i class="ph ph-timer"></i> 6 min read</span>
+                </div>
+                <h3><a href="post-2.html">Strategic Wealth: Navigating Volatility in 2026</a></h3>
+                <p>How modern investors are diversifying their portfolios with uncorrelated assets in an increasingly connected market.</p>
+                <div class="post-footer">
+                  <div class="post-author">
+                    <span>Elena Sofia</span>
+                  </div>
+                  <a href="post-2.html" class="read-more">Read More <i class="ph ph-arrow-right"></i></a>
+                </div>
+              </div>
+            </article>
+  
+            <!-- Article 3 -->
+            <article class="post-card glass-panel">
+              <div class="post-image">
+                <img src="images/post-3.png" alt="Future of Work" />
+                <span class="post-tag">Career</span>
+              </div>
+              <div class="post-content">
+                <div class="post-meta">
+                  <span><i class="ph ph-calendar"></i> May 10, 2026</span>
+                  <span><i class="ph ph-timer"></i> 5 min read</span>
+                </div>
+                <h3><a href="post-3.html">The Future of Work: Decentralized Careers</a></h3>
+                <p>Analyzing the shift towards digital sovereignty and how the new economy is rewriting the professional contract.</p>
+                <div class="post-footer">
+                  <div class="post-author">
+                    <span>Arthur Vance</span>
+                  </div>
+                  <a href="post-3.html" class="read-more">Read More <i class="ph ph-arrow-right"></i></a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Featured Article -->
+            <article class="post-card glass-panel">
+              <div class="post-image">
+                <img src="images/post-hero.png" alt="Market Analysis" />
+                <span class="post-tag">Featured</span>
+              </div>
+              <div class="post-content">
+                <div class="post-meta">
+                  <span><i class="ph ph-calendar"></i> May 18, 2026</span>
+                  <span><i class="ph ph-timer"></i> 12 min read</span>
+                </div>
+                <h3><a href="featured-post.html">2026 Market Outlook: The Renaissance of Real Value</a></h3>
+                <p>A deep dive into why investors are returning to fundamentals in a world filled with digital noise.</p>
+                <div class="post-footer">
+                  <div class="post-author">
+                    <span>Marcus Chen</span>
+                  </div>
+                  <a href="featured-post.html" class="read-more">Read More <i class="ph ph-arrow-right"></i></a>
+                </div>
+              </div>
+            </article>
+        </div>
+
+        <div class="load-more-container">
+            <button class="btn btn-secondary btn-pill-lg">Load More Articles</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer section-padding">
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">FTLuma<span class="dot">.</span></a>
+          <p>
+            Curating the best insights on global finance, investment strategies,
+            and the future of wealth.
+          </p>
+          <div class="social-links">
+            <a href="#" class="icon-btn" title="Twitter"><i class="ph ph-twitter-logo"></i></a>
+            <a href="#" class="icon-btn" title="GitHub"><i class="ph ph-github-logo"></i></a>
+            <a href="#" class="icon-btn" title="Dribbble"><i class="ph ph-dribbble-logo"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <h4>Categories</h4>
+          <ul>
+            <li><a href="topics.html">Digital Finance</a></li>
+            <li><a href="topics.html">Wealth Management</a></li>
+            <li><a href="topics.html">Market Strategy</a></li>
+            <li><a href="topics.html">Tech Trends</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#">Write for Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="disclaimer.html">Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="container copyright">
+        <p>&copy; <span id="current-year">2026</span> FTLuma Blog. Built for modern creators.</p>
+      </div>
+    </footer>
+
+    <!-- Subscription Modal -->
+    <div id="subscribe-modal" class="modal-overlay">
+      <div class="modal-content glass-panel fade-in">
+        <button class="modal-close" aria-label="Close modal">
+          <i class="ph ph-x"></i>
+        </button>
+        <div class="modal-header">
+          <div class="modal-icon"><i class="ph ph-envelope-simple-open"></i></div>
+          <h2>Join FTLuma Premium</h2>
+          <p>Get exclusive financial insights and market deep-dives delivered straight to your inbox.</p>
+        </div>
+        <form class="modal-form subscribe-form">
+          <div class="input-group">
+            <i class="ph ph-envelope"></i>
+            <input type="email" placeholder="email@example.com" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Subscribe Now</button>
+        </form>
+        <div class="modal-footer">
+          <p>Join 50,000+ investors. No spam, ever.</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

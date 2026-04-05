@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FTLuma | Explore Topics</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="blob-bg blob-1"></div><div class="blob-bg blob-2"></div><div class="blob-bg blob-3"></div>
+    
+    <!-- Top Header -->
+    <div class="top-header">
+      <div class="container top-header-content">
+        <ul class="top-header-links">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="disclaimer.html">Disclaimer</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="index.html#more">More <i class="ph ph-caret-down"></i></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass-effect">
+      <div class="container nav-content">
+        <a href="index.html" class="logo">FTLuma<span class="dot">.</span></a>
+
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="articles.html">Articles</a></li>
+          <li><a href="topics.html" class="active">Topics</a></li>
+          <li><a href="events.html">Upcoming Events</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button class="icon-btn theme-toggle" aria-label="Toggle dark mode">
+            <i class="ph ph-sun"></i>
+          </button>
+          <button class="btn btn-primary subscribe-trigger">Subscribe</button>
+          <button class="icon-btn mobile-menu-btn d-none" aria-label="Open menu">
+            <i class="ph ph-list"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <section class="section-padding fade-in">
+        <header class="article-header text-center-max-800">
+          <span class="tag">Discovery</span>
+          <h1 class="hero-title">Explore by Topic</h1>
+          <p class="section-subtitle">Dive deep into the insights that matter most to you. From global finance to the future of technology.</p>
+          
+          <div class="search-box-glamor glass-panel glamor-search-bar">
+            <i class="ph ph-magnifying-glass glamor-search-icon"></i>
+            <input type="text" placeholder="Search for topics, articles, or trends..." class="glamor-search-input">
+            <button class="btn btn-primary glamor-search-btn">Search</button>
+          </div>
+        </header>
+
+        <div class="topics-grid">
+          <!-- Digital Finance -->
+          <div class="topic-card glass-panel" data-color="blue">
+            <div class="topic-icon-wrapper"><i class="ph ph-chart-line-up"></i></div>
+            <h3>Digital Finance</h3>
+            <p>Exploring the evolution of global banking, digital currencies, and the future of monetary policy.</p>
+            <div class="topic-badges">
+              <span class="topic-badge">Banking</span>
+              <span class="topic-badge">Fintech</span>
+              <span class="topic-badge">12 Articles</span>
+            </div>
+          </div>
+
+          <!-- Wealth Management -->
+          <div class="topic-card glass-panel">
+            <div class="topic-icon-wrapper"><i class="ph ph-bank"></i></div>
+            <h3>Wealth Management</h3>
+            <p>Strategies for long-term growth, asset allocation, and personal wealth preservation in a volatile world.</p>
+            <div class="topic-badges">
+              <span class="topic-badge">Investment</span>
+              <span class="topic-badge">Growth</span>
+              <span class="topic-badge">8 Articles</span>
+            </div>
+          </div>
+
+          <!-- Market Strategy -->
+          <div class="topic-card glass-panel" data-color="orange">
+            <div class="topic-icon-wrapper"><i class="ph ph-compass"></i></div>
+            <h3>Market Strategy</h3>
+            <p>In-depth analysis of global market shifts, emerging trends, and strategic positioning for investors.</p>
+            <div class="topic-badges">
+              <span class="topic-badge">Global</span>
+              <span class="topic-badge">Shifts</span>
+              <span class="topic-badge">15 Articles</span>
+            </div>
+          </div>
+
+          <!-- Decentralized Economy -->
+          <div class="topic-card glass-panel" data-color="purple">
+            <div class="topic-icon-wrapper"><i class="ph ph-cube"></i></div>
+            <h3>Decentralized Economy</h3>
+            <p>Navigating the world of Web3, DeFi protocols, and the transformative power of decentralized systems.</p>
+            <div class="topic-badges">
+              <span class="topic-badge">Web3</span>
+              <span class="topic-badge">DeFi</span>
+              <span class="topic-badge">10 Articles</span>
+            </div>
+          </div>
+
+          <!-- Tech Insights -->
+          <div class="topic-card glass-panel" data-color="blue">
+            <div class="topic-icon-wrapper"><i class="ph ph-cpu"></i></div>
+            <h3>Tech Insights</h3>
+            <p>Analyzing the impact of AI, automation, and deep tech on the global financial landscape.</p>
+            <div class="topic-badges">
+              <span class="topic-badge">AI</span>
+              <span class="topic-badge">Future Tech</span>
+              <span class="topic-badge">7 Articles</span>
+            </div>
+          </div>
+
+          <!-- Future of Work -->
+          <div class="topic-card glass-panel">
+            <div class="topic-icon-wrapper"><i class="ph ph-users-three"></i></div>
+            <h3>Future of Work</h3>
+            <p>The intersection of productivity, digital-first culture, and the changing nature of professional careers.</p>
+            <div class="topic-badges">
+              <span class="topic-badge">Remote</span>
+              <span class="topic-badge">Careers</span>
+              <span class="topic-badge">6 Articles</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer section-padding">
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">FTLuma<span class="dot">.</span></a>
+          <p>
+            Curating the best insights on global finance, investment strategies,
+            and the future of wealth.
+          </p>
+          <div class="social-links">
+            <a href="#" class="icon-btn" title="Twitter"><i class="ph ph-twitter-logo"></i></a>
+            <a href="#" class="icon-btn" title="GitHub"><i class="ph ph-github-logo"></i></a>
+            <a href="#" class="icon-btn" title="Dribbble"><i class="ph ph-dribbble-logo"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <h4>Categories</h4>
+          <ul>
+            <li><a href="#">Design UI/UX</a></li>
+            <li><a href="#">Frontend Dev</a></li>
+            <li><a href="#">Backend Tech</a></li>
+            <li><a href="#">Productivity</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#">Write for Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="disclaimer.html">Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="container copyright">
+        <p>&copy; <span id="current-year">2026</span> FTLuma Blog. Built for modern creators.</p>
+      </div>
+    </footer>
+
+    <!-- Subscription Modal -->
+    <div id="subscribe-modal" class="modal-overlay">
+      <div class="modal-content glass-panel fade-in">
+        <button class="modal-close" aria-label="Close modal">
+          <i class="ph ph-x"></i>
+        </button>
+        <div class="modal-header">
+          <div class="modal-icon"><i class="ph ph-envelope-simple-open"></i></div>
+          <h2>Join FTLuma Premium</h2>
+          <p>Get exclusive financial insights and market deep-dives delivered straight to your inbox.</p>
+        </div>
+        <form class="modal-form subscribe-form">
+          <div class="input-group">
+            <i class="ph ph-envelope"></i>
+            <input type="email" placeholder="email@example.com" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Subscribe Now</button>
+        </form>
+        <div class="modal-footer">
+          <p>Join 50,000+ investors. No spam, ever.</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

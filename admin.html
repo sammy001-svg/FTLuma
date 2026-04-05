@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | FTLuma Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // Secure authentication check
+        (async () => {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (!session || error) {
+                    window.location.href = 'login.html';
+                }
+            } catch (err) {
+                window.location.href = 'login.html';
+            }
+        })();
+    </script>
+    <style>
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        .admin-sidebar {
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            z-index: 10;
+        }
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius-md);
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+        .admin-nav-link:hover, .admin-nav-link.active {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+        }
+        .admin-nav-link.logout {
+            margin-top: auto;
+            color: #f87171;
+        }
+        .admin-main {
+            padding: 3rem;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 3rem;
+        }
+        .admin-content-card {
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2.5rem;
+        }
+        .post-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border-radius: var(--border-radius-md);
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-family: inherit;
+            outline: none;
+            transition: border-color var(--transition-fast);
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--color-primary);
+        }
+        .form-group textarea {
+            height: 350px;
+            resize: vertical;
+        }
+        .sidebar-widgets {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .widget {
+            padding: 1.5rem;
+        }
+        .widget h4 {
+            margin-bottom: 1.25rem;
+            font-size: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+        #success-msg {
+            display: none;
+            padding: 1.25rem;
+            border-radius: var(--border-radius-md);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #10b981;
+            margin-bottom: 2rem;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideDown 0.3s ease-out;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .image-preview {
+            aspect-ratio: 16/9;
+            border-radius: var(--border-radius-md);
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px dashed var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        @media (max-width: 992px) {
+            .admin-layout { grid-template-columns: 1fr; }
+            .admin-sidebar { display: none; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+        .success-icon-lg {
+            font-size: 1.5rem;
+        }
+        .form-group textarea.excerpt-textarea {
+            height: 100px;
+        }
+        .preview-img-full {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="blob-bg blob-3"></div>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <a href="index.html" class="logo">FTLuma<span class="dot">.</span></a>
+            <nav class="admin-nav">
+                <a href="#" class="admin-nav-link active">
+                    <i class="ph ph-squares-four"></i> Dashboard
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="ph ph-article"></i> All Articles
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="ph ph-plus-circle"></i> New Article
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="ph ph-users"></i> Authors
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="ph ph-chart-line-up"></i> Analytics
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="ph ph-gear"></i> Settings
+                </a>
+                <a href="#" onclick="handleLogout()" class="admin-nav-link logout">
+                    <i class="ph ph-sign-out"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div id="success-msg">
+                <i class="ph ph-check-circle success-icon-lg"></i> 
+                <div>
+                    <strong>Success!</strong> Your article has been published and saved locally.
+                </div>
+            </div>
+            
+            <header class="admin-header">
+                <div>
+                    <h1 class="section-title">Create New Article</h1>
+                    <p class="text-secondary">Fill in the details below to draft your next financial insight.</p>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn btn-outline" onclick="alert('Draft saved!')">Save Draft</button>
+                    <button class="btn btn-primary" onclick="publishArticle()">Publish Article</button>
+                </div>
+            </header>
+
+            <form id="post-form" class="form-grid" onsubmit="event.preventDefault()">
+                <div class="post-editor">
+                    <div class="admin-content-card glass-panel">
+                        <div class="post-form">
+                            <div class="form-group">
+                                <label for="title">Article Title</label>
+                                <input type="text" id="title" placeholder="e.g., The Future of Global Markets in 2027" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="excerpt">Excerpt / Summary</label>
+                                <textarea id="excerpt" placeholder="A brief hook for your readers..." class="excerpt-textarea"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="content">Main Content</label>
+                                <textarea id="content" placeholder="Start writing your article here..." required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-widgets">
+                    <div class="widget glass-panel">
+                        <h4>Publishing Settings</h4>
+                        <div class="post-form">
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select id="category">
+                                    <option value="414603f2-3392-40e6-b023-f5d06e866871">Markets</option>
+                                    <option value="7baebabf-87c2-445c-9fa4-fc067a76745c">Wealth</option>
+                                    <option value="31cbc2a4-ff95-422c-bb68-6463cf22b2d3">Crypto</option>
+                                    <option value="f317e0b0-9c69-4586-94a7-8f4739e03972">Insights</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="author">Author</label>
+                                <select id="author">
+                                    <option value="7a44a8ea-1e78-48bc-aa26-79776a748f98">Sarah Jenkins</option>
+                                    <option value="a0b29219-3545-42a5-aee5-819205442c10">David Chen</option>
+                                    <option value="d36397f4-5117-4420-8804-66af77d9d130">Maya Patel</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Visibility</label>
+                                <select id="status">
+                                    <option value="published">Public</option>
+                                    <option value="private">Private</option>
+                                    <option value="draft">Draft</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="widget glass-panel">
+                        <h4>Featured Image</h4>
+                        <div class="post-form">
+                            <div class="form-group">
+                                <label for="image-url">Image URL</label>
+                                <input type="text" id="image-url" placeholder="images/post-1.png" value="images/post-1.png">
+                            </div>
+                            <div class="image-preview" id="preview-box">
+                                <img src="images/post-1.png" alt="Preview" class="preview-img-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            window.location.href = 'login.html';
+        }
+
+        async function publishArticle() {
+            const title = document.getElementById('title').value;
+            const category_id = document.getElementById('category').value;
+            const excerpt = document.getElementById('excerpt').value;
+            const content = document.getElementById('content').value;
+            const author_id = document.getElementById('author').value;
+            const featured_image = document.getElementById('image-url').value;
+            const status = document.getElementById('status').value;
+
+            if (!title || !content) {
+                alert('Please provide a title and content for your article.');
+                return;
+            }
+
+            // Create slug from title
+            const slug = title.toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)+/g, '');
+
+            const { data, error } = await supabase
+                .from('articles')
+                .insert([{
+                    title,
+                    slug,
+                    excerpt,
+                    content,
+                    author_id,
+                    category_id,
+                    status,
+                    featured_image,
+                    published_at: new Date().toISOString()
+                }]);
+
+            if (error) {
+                console.error('Publish error:', error);
+                alert('Failed to publish article. Check console for details.');
+                return;
+            }
+
+            // Visual feedback
+            const msg = document.getElementById('success-msg');
+            msg.style.display = 'flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            document.getElementById('post-form').reset();
+            
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 5000);
+        }
+
+        // Live image preview
+        document.getElementById('image-url').addEventListener('input', function(e) {
+            const previewImg = document.querySelector('#preview-box img');
+            if (previewImg) {
+                previewImg.src = e.target.value;
+            }
+        });
+    </script>
+</body>
+</html>

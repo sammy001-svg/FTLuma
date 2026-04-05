@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FTLuma | Upcoming Events</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .events-hero {
+        position: relative;
+        padding: 6rem 0;
+        text-align: center;
+        background: radial-gradient(circle at center, hsla(var(--hue-primary), 70%, 50%, 0.15) 0%, transparent 70%);
+      }
+      .countdown-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+      .countdown-item {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        padding: 1.5rem;
+        border-radius: var(--border-radius-md);
+        min-width: 100px;
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+      }
+      .countdown-number {
+        font-family: var(--font-display);
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--color-primary);
+        display: block;
+      }
+      .countdown-label {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .event-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-top: 4rem;
+      }
+      .event-card {
+        display: flex;
+        flex-direction: column;
+        transition: transform var(--transition-normal);
+      }
+      .event-card:hover {
+        transform: translateY(-10px);
+      }
+      .event-card-header {
+        position: relative;
+        height: 200px;
+        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+        overflow: hidden;
+      }
+      .event-card-header img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .event-date-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--color-primary);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius-sm);
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+      .event-card-body {
+        padding: 2rem;
+        flex-grow: 1;
+      }
+      .event-location {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+      }
+      .event-card-body h3 {
+        margin-bottom: 1rem;
+        font-family: var(--font-display);
+      }
+      .register-btn {
+        width: 100%;
+        margin-top: 1.5rem;
+      }
+      @media (max-width: 768px) {
+        .countdown-wrapper { gap: 1rem; }
+        .countdown-item { padding: 1rem; min-width: 80px; }
+        .countdown-number { font-size: 1.75rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="blob-bg blob-1"></div><div class="blob-bg blob-2"></div><div class="blob-bg blob-3"></div>
+    
+    <!-- Top Header -->
+    <div class="top-header">
+      <div class="container top-header-content">
+        <ul class="top-header-links">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="disclaimer.html">Disclaimer</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="index.html#more">More <i class="ph ph-caret-down"></i></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass-effect">
+      <div class="container nav-content">
+        <a href="index.html" class="logo">FTLuma<span class="dot">.</span></a>
+
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="articles.html">Articles</a></li>
+          <li><a href="topics.html">Topics</a></li>
+          <li><a href="events.html" class="active">Upcoming Events</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button class="icon-btn theme-toggle" aria-label="Toggle dark mode">
+            <i class="ph ph-sun"></i>
+          </button>
+          <button class="btn btn-primary subscribe-trigger">Subscribe</button>
+          <a href="login.html" class="btn btn-outline" id="nav-login-btn">Login</a>
+          <button class="icon-btn mobile-menu-btn d-none" aria-label="Open menu">
+            <i class="ph ph-list"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <section class="events-hero fade-in">
+        <span class="tag">Upcoming Global Summit</span>
+        <h1 class="hero-title">FTLuma Future Finance 2026</h1>
+        <p class="section-subtitle">Join us in Dubai for the most anticipated financial technology conference of the year.</p>
+        
+        <div class="countdown-wrapper" id="countdown">
+          <div class="countdown-item">
+            <span class="countdown-number" id="days">42</span>
+            <span class="countdown-label">Days</span>
+          </div>
+          <div class="countdown-item">
+            <span class="countdown-number" id="hours">12</span>
+            <span class="countdown-label">Hours</span>
+          </div>
+          <div class="countdown-item">
+            <span class="countdown-number" id="minutes">45</span>
+            <span class="countdown-label">Mins</span>
+          </div>
+          <div class="countdown-item">
+            <span class="countdown-number" id="seconds">30</span>
+            <span class="countdown-label">Secs</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-padding fade-in">
+        <div class="section-header">
+          <div>
+            <span class="tag">Event Schedule</span>
+            <h2 class="section-title">Major Upcoming Events</h2>
+          </div>
+        </div>
+
+        <div class="event-grid">
+          <!-- Event 1 -->
+          <div class="event-card glass-panel">
+            <div class="event-card-header">
+              <img src="images/post-hero.png" alt="Summit 2026">
+              <span class="event-date-badge">JUNE 15-17</span>
+            </div>
+            <div class="event-card-body">
+              <div class="event-location">
+                <i class="ph ph-map-pin"></i> Museum of the Future, Dubai
+              </div>
+              <h3>Future Finance Global Summit 2026</h3>
+              <p>The flagship event for the FTLuma community, featuring 50+ speakers on DeFi, CBDCs, and institutional wealth management.</p>
+              <button class="btn btn-primary register-btn">Register for Event</button>
+            </div>
+          </div>
+
+          <!-- Event 2 -->
+          <div class="event-card glass-panel">
+            <div class="event-card-header">
+              <img src="images/post-1.png" alt="Wealth Workshop">
+              <span class="event-date-badge">JULY 05</span>
+            </div>
+            <div class="event-card-body">
+              <div class="event-location">
+                <i class="ph ph-video-camera"></i> Virtual Workshop
+              </div>
+              <h3>Next-Gen Wealth Strategy Workshop</h3>
+              <p>An interactive digital session focused on building hybrid portfolio models combining traditional and digital assets.</p>
+              <button class="btn btn-primary register-btn">Claim Free Ticket</button>
+            </div>
+          </div>
+
+          <!-- Event 3 -->
+          <div class="event-card glass-panel">
+            <div class="event-card-header">
+              <img src="images/post-2.png" alt="Crypto Insights">
+              <span class="event-date-badge">AUG 22</span>
+            </div>
+            <div class="event-card-body">
+              <div class="event-location">
+                <i class="ph ph-map-pin"></i> Marina Bay Sands, Singapore
+              </div>
+              <h3>Institutional Crypto Integration Forum</h3>
+              <p>Bringing together banking leaders and digital asset pioneers to discuss regulatory frameworks and liquidity solutions.</p>
+              <button class="btn btn-primary register-btn">Register for Event</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="index.html" class="logo">FTLuma<span class="dot">.</span></a>
+            <p>Advancing financial intelligence through professional insights and global perspectives.</p>
+            <div class="social-links">
+              <a href="#" aria-label="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>
+              <a href="#" aria-label="Twitter"><i class="ph ph-twitter-logo"></i></a>
+              <a href="#" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
+            </div>
+          </div>
+          <div class="footer-links">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="articles.html">Articles</a></li>
+              <li><a href="topics.html">Topics</a></li>
+              <li><a href="events.html">Events</a></li>
+            </ul>
+          </div>
+          <div class="footer-links">
+            <h4>Support</h4>
+            <ul>
+              <li><a href="contact.html">Contact</a></li>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="disclaimer.html">Disclaimer</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <div class="footer-newsletter">
+            <h4>Stay Informed</h4>
+            <p>Get our weekly intelligence briefing.</p>
+            <form class="subscribe-form">
+              <input type="email" placeholder="Email address" required />
+              <button type="submit" class="btn btn-primary">Join</button>
+            </form>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; <span id="current-year">2026</span> FTLuma Intelligence. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+      // Simple Countdown Logic
+      const targetDate = new Date("June 15, 2026 09:00:00").getTime();
+      
+      const countdown = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("days").innerHTML = d;
+        document.getElementById("hours").innerHTML = h;
+        document.getElementById("minutes").innerHTML = m;
+        document.getElementById("seconds").innerHTML = s;
+
+        if (distance < 0) {
+          clearInterval(countdown);
+          document.getElementById("countdown").innerHTML = "EVENT LIVE";
+        }
+      }, 1000);
+    </script>
+  </body>
+</html>

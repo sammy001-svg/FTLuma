@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FTLuma | Modern Insights & Perspectives</title>
+    <meta
+      name="description"
+      content="FTLuma provides expert insights into financial stability, wealth management, and global market trends."
+    />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Phosphor Icons for modern iconography -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="blob-bg blob-1"></div>
+    <div class="blob-bg blob-2"></div>
+    <div class="blob-bg blob-3"></div>
+
+    <div class="top-header">
+      <div class="container top-header-content">
+        <ul class="top-header-links">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="disclaimer.html">Disclaimer</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="#more">More <i class="ph ph-caret-down"></i></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <nav class="navbar glass-effect">
+      <div class="container nav-content">
+        <a href="#" class="logo">FTLuma<span class="dot">.</span></a>
+
+        <ul class="nav-links">
+          <li><a href="#" class="active">Home</a></li>
+          <li><a href="articles.html">Articles</a></li>
+          <li><a href="topics.html">Topics</a></li>
+          <li><a href="events.html">Upcoming Events</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button class="icon-btn theme-toggle" aria-label="Toggle dark mode">
+            <i class="ph ph-sun"></i>
+          </button>
+          <button class="btn btn-primary subscribe-trigger">Subscribe</button>
+          <a href="login.html" class="btn btn-outline">Login</a>
+          <button
+            class="icon-btn mobile-menu-btn d-none"
+            aria-label="Open menu"
+          >
+            <i class="ph ph-list"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero container">
+        <div class="hero-content">
+          <div class="badge fade-in-up delay-1">
+            <span class="pulse-dot"></span> New Article Published
+          </div>
+          <h1 class="hero-title fade-in-up delay-2">
+            Master Your <br />
+            <span class="gradient-text">Financial Future</span> <br />
+            with Confidence.
+          </h1>
+          <p class="hero-subtitle fade-in-up delay-3">
+            Strategic insights on wealth management, market fluctuations, and the future of global finance, curated for the modern investor.
+          </p>
+          <div class="hero-actions fade-in-up delay-4">
+            <a href="#articles" class="btn btn-primary btn-lg">Start Reading</a>
+            <a href="#trending" class="btn btn-outline btn-lg">View Trending</a>
+          </div>
+        </div>
+        <div class="hero-visual fade-in delay-5">
+          <a href="featured-post.html" class="featured-card glass-panel block-link">
+            <div class="featured-image">
+              <img
+                src="images/post-hero.png"
+                alt="Featured article cover"
+                id="hero-img-placeholder"
+              />
+              <div class="category-tag">Featured</div>
+            </div>
+            <div class="featured-info">
+              <h2>The Rise of Decentralized Finance: Navigating the 2026 Shift</h2>
+              <div class="meta">
+                <div class="author">
+                  <img
+                    src="images/author-1.png"
+                    alt="Author"
+                    class="avatar"
+                    id="author-img-1"
+                  />
+                  <span>Sarah Jenkins</span>
+                </div>
+                <span class="date">Oct 24, 2026</span>
+                <span class="read-time"
+                  ><i class="ph ph-clock"></i> 5 min read</span
+                >
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <section id="articles" class="articles-section container section-padding">
+        <div class="section-header">
+          <h2 class="section-title">Latest Articles</h2>
+          <div class="filters">
+            <button class="filter-btn active">All</button>
+            <button class="filter-btn">Markets</button>
+            <button class="filter-btn">Wealth</button>
+            <button class="filter-btn">Crypto</button>
+          </div>
+        </div>
+
+        <div class="grid layout-grid">
+          <!-- Post 1 -->
+          <article class="post-card glass-panel">
+            <div class="post-img-wrapper">
+              <img
+                src="images/post-1.png"
+                alt="Post thumbnail"
+                class="post-img"
+                id="post-img-1"
+              />
+              <div class="tags">
+                <span class="tag">Markets</span>
+              </div>
+            </div>
+            <div class="post-content">
+              <h3 class="post-title">
+                <a href="post-1.html"
+                  >Global Market Forecast: What to Expect in Q4 2026</a
+                >
+              </h3>
+              <p class="post-excerpt">
+                A deep dive into emerging market trends, interest rate shifts, and geopolitical factors shaping the global financial landscape this year.
+              </p>
+              <div class="meta">
+                <div class="author">
+                  <img
+                    src="images/author-2.png"
+                    alt="Author"
+                    class="avatar"
+                    id="author-img-2"
+                  />
+                  <span>David Chen</span>
+                </div>
+                <span class="date">Oct 22, 2026</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Post 2 -->
+          <article class="post-card glass-panel">
+            <div class="post-img-wrapper">
+              <img
+                src="images/post-2.png"
+                alt="Post thumbnail"
+                class="post-img"
+                id="post-img-2"
+              />
+              <div class="tags">
+                <span class="tag">Wealth</span>
+              </div>
+            </div>
+            <div class="post-content">
+              <h3 class="post-title">
+                <a href="post-2.html"
+                  >Wealth Management Strategies for the Next Generation</a
+                >
+              </h3>
+              <p class="post-excerpt">
+                Learn how to build a diversified portfolio that stands the test of time, focusing on long-term growth and tax-efficient investing.
+              </p>
+              <div class="meta">
+                <div class="author">
+                  <img
+                    src="images/author-3.png"
+                    alt="Author"
+                    class="avatar"
+                    id="author-img-3"
+                  />
+                  <span>Maya Patel</span>
+                </div>
+                <span class="date">Oct 19, 2026</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Post 3 -->
+          <article class="post-card glass-panel">
+            <div class="post-img-wrapper">
+              <img
+                src="images/post-3.png"
+                alt="Post thumbnail"
+                class="post-img"
+                id="post-img-3"
+              />
+              <div class="tags">
+                <span class="tag">Crypto</span>
+              </div>
+            </div>
+            <div class="post-content">
+              <h3 class="post-title">
+                <a href="post-3.html">The Impact of CBDCs on Global Banking Stability</a>
+              </h3>
+              <p class="post-excerpt">
+                Analyzing the transition to Central Bank Digital Currencies and what it means for privacy, transaction speed, and commercial banking.
+              </p>
+              <div class="meta">
+                <div class="author">
+                  <img
+                    src="images/author-1.png"
+                    alt="Author"
+                    class="avatar"
+                    id="author-img-1b"
+                  />
+                  <span>Sarah Jenkins</span>
+                </div>
+                <span class="date">Oct 15, 2026</span>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="load-more">
+          <button class="btn btn-outline btn-lg">Load More Articles</button>
+        </div>
+      </section>
+
+      <section class="newsletter-section section-padding">
+        <div class="container">
+          <div class="newsletter-box glass-panel glow-effect">
+            <div class="newsletter-content">
+              <h2>Never miss an update.</h2>
+              <p>
+                Join our newsletter to receive the latest articles, exclusive
+                resources, and design inspiration directly in your inbox.
+              </p>
+            </div>
+            <form class="newsletter-form">
+              <div class="input-group">
+                <i class="ph ph-envelope"></i>
+                <input
+                  type="email"
+                  placeholder="Enter your email address"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">Subscribe</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer section-padding">
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">FTLuma<span class="dot">.</span></a>
+          <p>
+            Curating the best insights on global finance, investment strategies,
+            and the future of wealth.
+          </p>
+          <div class="social-links">
+            <a href="#" class="icon-btn" title="Twitter"><i class="ph ph-twitter-logo"></i></a>
+            <a href="#" class="icon-btn" title="GitHub"><i class="ph ph-github-logo"></i></a>
+            <a href="#" class="icon-btn" title="Dribbble"><i class="ph ph-dribbble-logo"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <h4>Categories</h4>
+          <ul>
+            <li><a href="#">Design UI/UX</a></li>
+            <li><a href="#">Frontend Dev</a></li>
+            <li><a href="#">Backend Tech</a></li>
+            <li><a href="#">Productivity</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#">Write for Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="disclaimer.html">Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="container copyright">
+        <p>&copy; <span id="current-year">2026</span> FTLuma Blog. Built for modern creators.</p>
+      </div>
+    </footer>
+
+    <!-- Subscription Modal -->
+    <div id="subscribe-modal" class="modal-overlay">
+      <div class="modal-content glass-panel fade-in">
+        <button class="modal-close" aria-label="Close modal">
+          <i class="ph ph-x"></i>
+        </button>
+        <div class="modal-header">
+          <div class="modal-icon"><i class="ph ph-envelope-simple-open"></i></div>
+          <h2>Join FTLuma Premium</h2>
+          <p>Get exclusive financial insights and market deep-dives delivered straight to your inbox.</p>
+        </div>
+        <form class="modal-form subscribe-form">
+          <div class="input-group">
+            <i class="ph ph-envelope"></i>
+            <input type="email" placeholder="email@example.com" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Subscribe Now</button>
+        </form>
+        <div class="modal-footer">
+          <p>Join 50,000+ investors. No spam, ever.</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
