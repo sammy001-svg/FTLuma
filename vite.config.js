@@ -7,7 +7,12 @@ export default defineConfig({
       name: 'rewrite-middleware',
       configureServer(server) {
         server.middlewares.use((req, res, next) => {
-          if (req.url && !req.url.includes('.') && req.url !== '/') {
+          if (req.url === '/admin') {
+            res.writeHead(301, { Location: '/admin/' });
+            res.end();
+            return;
+          }
+          if (req.url && !req.url.includes('.') && req.url !== '/' && req.url !== '/admin/') {
             req.url += '.html';
           }
           next();
