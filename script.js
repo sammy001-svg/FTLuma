@@ -208,6 +208,7 @@ async function renderSupabaseArticles() {
     
     // Only run on index.html or root
     const isHomePage = window.location.pathname.endsWith('index.html') || 
+                       window.location.pathname.endsWith('index') || 
                        window.location.pathname.endsWith('/') || 
                        window.location.pathname === '';
 
@@ -249,7 +250,7 @@ async function renderSupabaseArticles() {
             
             // Link hero to actual article
             const heroLink = heroInfo.closest('a');
-            if (heroLink) heroLink.href = `${featured.slug}.html`;
+            if (heroLink) heroLink.href = `${featured.slug}`;
         }
     }
 
@@ -272,7 +273,7 @@ async function renderSupabaseArticles() {
                 </div>
                 <div class="post-content">
                   <h3 class="post-title">
-                    <a href="${post.slug}.html">${post.title}</a>
+                    <a href="${post.slug}">${post.title}</a>
                   </h3>
                   <p class="post-excerpt">${post.excerpt}</p>
                   <div class="meta">
