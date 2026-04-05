@@ -9,8 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <script src="../supabase-config.js"></script>
+    <link rel="stylesheet" href="../style.css">
     <style>
         .auth-page {
             min-height: 100vh;
@@ -115,7 +115,7 @@
     <main class="auth-page">
         <div class="container auth-container">
             <div class="auth-card glass-panel fade-in">
-                <a href="index.html" class="logo">FTLuma<span class="dot">.</span></a>
+                <a href="../index.html" class="logo">FTLuma<span class="dot">.</span></a>
                 <div class="auth-header">
                     <h1>Admin Login</h1>
                     <p>Enter your credentials to access the dashboard</p>
@@ -153,7 +153,7 @@
         </div>
     </main>
 
-    <script src="script.js"></script>
+    <script src="../script.js"></script>
     <script>
         async function handleAuthSumbit(e) {
             e.preventDefault();
@@ -174,7 +174,7 @@
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Login to Dashboard <i class="ph ph-arrow-right"></i>';
             } else {
-                window.location.href = 'admin.html';
+                window.location.href = 'index.html';
             }
         }
     </script>

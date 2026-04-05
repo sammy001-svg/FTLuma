@@ -149,19 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSupabaseArticles();
     initSubscription();
     initContactForm();
-
-    // navbar session check
-    const updateAuthUI = async () => {
-        const loginBtn = document.querySelector('nav .btn-outline[href="login.html"]');
-        if (!loginBtn || !window.supabase) return;
-        
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-            loginBtn.textContent = 'Dashboard';
-            loginBtn.href = 'admin.html';
-        }
-    };
-    updateAuthUI();
 });
 
 /* ==========================================================================

@@ -10,8 +10,8 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <script src="../supabase-config.js"></script>
+    <link rel="stylesheet" href="../style.css">
     <script>
         // Secure authentication check
         (async () => {
@@ -185,7 +185,7 @@
 
     <div class="admin-layout">
         <aside class="admin-sidebar">
-            <a href="index.html" class="logo">FTLuma<span class="dot">.</span></a>
+            <a href="../index.html" class="logo">FTLuma<span class="dot">.</span></a>
             <nav class="admin-nav">
                 <a href="#" class="admin-nav-link active">
                     <i class="ph ph-squares-four"></i> Dashboard
@@ -299,7 +299,7 @@
         </main>
     </div>
 
-    <script src="script.js"></script>
+    <script src="../script.js"></script>
     <script>
         async function handleLogout() {
             await supabase.auth.signOut();
