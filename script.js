@@ -4,100 +4,93 @@
 
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // --- Dark/Light Mode Toggle ---
-    const themeBtn = document.querySelector('.theme-toggle');
-    const html = document.documentElement;
-    const themeIcon = themeBtn.querySelector('i');
-    
-    // Check local storage for theme preference
-    const savedTheme = localStorage.getItem('ftluma-theme');
-    if (savedTheme) {
-        html.setAttribute('data-theme', savedTheme);
-        updateThemeIcon(savedTheme);
-    }
 
-    themeBtn.addEventListener('click', () => {
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('ftluma-theme', newTheme);
-        updateThemeIcon(newTheme);
+    // ── Helpers ────────────────────────────────────────────────────────────
+    const html = document.documentElement;
+
+    // ── Dark / Light Mode Toggle ────────────────────────────────────────────
+    // Support one or more .theme-toggle buttons on the page
+    const applyTheme = (theme) => {
+        html.setAttribute('data-theme', theme);
+        localStorage.setItem('ftluma-theme', theme);
+        // Update every icon (desktop + mobile menu)
+        document.querySelectorAll('.theme-toggle i').forEach(icon => {
+            icon.className = theme === 'light' ? 'ph ph-moon' : 'ph ph-sun';
+        });
+    };
+
+    // Restore saved preference
+    const savedTheme = localStorage.getItem('ftluma-theme');
+    if (savedTheme) applyTheme(savedTheme);
+
+    // Wire up all toggle buttons
+    document.querySelectorAll('.theme-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            applyTheme(next);
+        });
     });
 
-    function updateThemeIcon(theme) {
-        if (theme === 'light') {
-            themeIcon.classList.remove('ph-sun');
-            themeIcon.classList.add('ph-moon');
-        } else {
-            themeIcon.classList.remove('ph-moon');
-            themeIcon.classList.add('ph-sun');
-        }
-    }
-
-    // --- Mobile Menu Toggle ---
+    // ── Mobile Menu Toggle ─────────────────────────────────────────────────
     const mobileBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks = document.querySelector('.nav-links');
-    const body = document.body;
+    const navLinks  = document.querySelector('.nav-links');
 
     if (mobileBtn && navLinks) {
-        const toggleMenu = () => {
-            const isOpen = navLinks.classList.toggle('show');
-            body.classList.toggle('no-scroll', isOpen);
-            
+        const openMenu = () => {
+            navLinks.classList.add('show');
+            document.body.classList.add('no-scroll');
             const icon = mobileBtn.querySelector('i');
-            if (isOpen) {
-                icon.classList.remove('ph-list');
-                icon.classList.add('ph-x');
-            } else {
-                icon.classList.remove('ph-x');
-                icon.classList.add('ph-list');
-            }
+            if (icon) { icon.classList.remove('ph-list'); icon.classList.add('ph-x'); }
         };
 
-        mobileBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleMenu();
+        const closeMenu = () => {
+            navLinks.classList.remove('show');
+            document.body.classList.remove('no-scroll');
+            const icon = mobileBtn.querySelector('i');
+            if (icon) { icon.classList.remove('ph-x'); icon.classList.add('ph-list'); }
+        };
+
+        const toggleMenu = () =>
+            navLinks.classList.contains('show') ? closeMenu() : openMenu();
+
+        // Hamburger click
+        mobileBtn.addEventListener('click', e => { e.stopPropagation(); toggleMenu(); });
+
+        // Close when any nav link is tapped
+        navLinks.querySelectorAll('a').forEach(a =>
+            a.addEventListener('click', () => { if (navLinks.classList.contains('show')) closeMenu(); })
+        );
+
+        // Close on Escape key
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && navLinks.classList.contains('show')) closeMenu();
         });
 
-        // Close menu when clicking a link
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (navLinks.classList.contains('show')) {
-                    toggleMenu();
-                }
-            });
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (navLinks.classList.contains('show') && 
-                !navLinks.contains(e.target) && 
+        // Close when tapping outside the panel
+        document.addEventListener('click', e => {
+            if (navLinks.classList.contains('show') &&
+                !navLinks.contains(e.target) &&
                 !mobileBtn.contains(e.target)) {
-                toggleMenu();
+                closeMenu();
             }
         });
     }
 
-    // Add no-scroll CSS dynamically if not present
+    // Inject no-scroll style if missing
     if (!document.getElementById('no-scroll-style')) {
-        const style = document.createElement('style');
-        style.id = 'no-scroll-style';
-        style.textContent = '.no-scroll { overflow: hidden; }';
-        document.head.appendChild(style);
+        const s = document.createElement('style');
+        s.id = 'no-scroll-style';
+        s.textContent = '.no-scroll { overflow: hidden !important; }';
+        document.head.appendChild(s);
     }
 
-    // --- Navbar Scroll Effect ---
+    // ── Navbar Scroll Effect ───────────────────────────────────────────────
     const navbar = document.querySelector('.navbar');
-    
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
+    if (navbar) {
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+    }
 
     // --- Filter Buttons (Simulated Logic) ---
     const filterBtns = document.querySelectorAll('.filter-btn');

@@ -430,6 +430,11 @@ button {
   gap: 1rem;
 }
 
+/* The hamburger is always in the DOM; hide it on desktop */
+.mobile-menu-btn {
+  display: none;
+}
+
 .d-none {
   display: none;
 }
@@ -976,13 +981,29 @@ button {
     width: 100%;
   }
 
-  .mobile-menu-btn {
-    display: flex;
-    z-index: 1001;
+  /* Show hamburger — override any .d-none or residual rule */
+  .mobile-menu-btn,
+  .nav-actions .mobile-menu-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+    position: relative;
+  }
+
+  /* Page-dimming backdrop when menu is open */
+  .nav-links.show::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+    right: 100%; /* sits to the LEFT of the panel */
+    width: 100vw;
   }
 
   .nav-actions .subscribe-trigger {
-    display: none; /* Move to menu if needed, or hide to save space */
+    display: none;
   }
 
   .hero-title {
