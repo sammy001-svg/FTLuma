@@ -179,6 +179,81 @@
             object-fit: cover;
         }
 
+        /* ── Featured Image Upload ──────────────────────── */
+        .upload-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color var(--transition-fast), background var(--transition-fast);
+            position: relative;
+        }
+        .upload-zone:hover,
+        .upload-zone.drag-over {
+            border-color: var(--color-primary);
+            background: rgba(var(--hue-primary, 150), 100%, 50%, 0.06);
+        }
+        .upload-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        .upload-zone-icon {
+            font-size: 2rem;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .upload-zone p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        .upload-zone strong {
+            color: var(--color-primary);
+        }
+        .upload-progress {
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius-md);
+            background: rgba(var(--hue-primary, 150), 100%, 50%, 0.08);
+            border: 1px solid var(--color-primary);
+            font-size: 0.875rem;
+            color: var(--color-primary);
+            margin-top: 0.75rem;
+        }
+        .upload-progress.active { display: flex; }
+        .upload-progress .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--color-primary);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            flex-shrink: 0;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .or-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0.75rem 0;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+        .or-divider::before, .or-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+
         .admin-mobile-header {
             padding: 1rem;
             position: sticky;
@@ -321,13 +396,32 @@
                     <div class="widget glass-panel">
                         <h4>Featured Image</h4>
                         <div class="post-form">
+
+                            <!-- Drag & Drop Upload Zone -->
+                            <div class="upload-zone" id="upload-zone">
+                                <input type="file" id="image-file" accept="image/*">
+                                <span class="upload-zone-icon"><i class="ph ph-upload-simple"></i></span>
+                                <p><strong>Click to upload</strong> or drag &amp; drop</p>
+                                <p>PNG, JPEG, WEBP &mdash; max 5 MB</p>
+                            </div>
+
+                            <!-- Upload progress indicator -->
+                            <div class="upload-progress" id="upload-progress">
+                                <div class="spinner"></div>
+                                <span id="upload-status">Uploading…</span>
+                            </div>
+
+                            <div class="or-divider">or paste URL</div>
+
                             <div class="form-group">
                                 <label for="image-url">Image URL</label>
-                                <input type="text" id="image-url" placeholder="../images/post-1.png" value="../images/post-1.png">
+                                <input type="text" id="image-url" placeholder="https://… or ../images/post-1.png">
                             </div>
-                            <div class="image-preview" id="preview-box">
-                                <img src="../images/post-1.png" alt="Preview" class="preview-img-full">
+
+                            <div class="image-preview" id="preview-box" style="display:none">
+                                <img src="" alt="Preview" class="preview-img-full" id="preview-img">
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -393,12 +487,71 @@
             }, 5000);
         }
 
-        // Live image preview
-        document.getElementById('image-url').addEventListener('input', function(e) {
-            const previewImg = document.querySelector('#preview-box img');
-            if (previewImg) {
-                previewImg.src = e.target.value;
+        // ── Image upload to Supabase Storage ──────────────────────────────────
+        const BUCKET = 'article-images'; // change if your bucket name differs
+
+        async function uploadImage(file) {
+            const ext = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+            const { data, error } = await supabase.storage
+                .from(BUCKET)
+                .upload(fileName, file, { cacheControl: '3600', upsert: false });
+            if (error) throw error;
+            const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(fileName);
+            return urlData.publicUrl;
+        }
+
+        function showPreview(src) {
+            const box = document.getElementById('preview-box');
+            const img = document.getElementById('preview-img');
+            img.src = src;
+            box.style.display = 'block';
+        }
+
+        // File input change handler
+        document.getElementById('image-file').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File is too large. Maximum size is 5 MB.');
+                return;
             }
+
+            const progress = document.getElementById('upload-progress');
+            const status   = document.getElementById('upload-status');
+            progress.classList.add('active');
+            status.textContent = 'Uploading…';
+
+            try {
+                const publicUrl = await uploadImage(file);
+                document.getElementById('image-url').value = publicUrl;
+                showPreview(publicUrl);
+                status.textContent = 'Upload complete ✓';
+                setTimeout(() => progress.classList.remove('active'), 2500);
+            } catch (err) {
+                console.error(err);
+                status.textContent = `Upload failed: ${err.message}`;
+                setTimeout(() => progress.classList.remove('active'), 4000);
+            }
+        });
+
+        // Drag-and-drop on the upload zone
+        const zone = document.getElementById('upload-zone');
+        zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+        zone.addEventListener('dragleave', ()  => zone.classList.remove('drag-over'));
+        zone.addEventListener('drop', async e => {
+            e.preventDefault();
+            zone.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                document.getElementById('image-file').files = e.dataTransfer.files;
+                document.getElementById('image-file').dispatchEvent(new Event('change'));
+            }
+        });
+
+        // URL field live preview (manual paste/type)
+        document.getElementById('image-url').addEventListener('input', function(e) {
+            if (e.target.value) showPreview(e.target.value);
         });
     </script>
 </body>
