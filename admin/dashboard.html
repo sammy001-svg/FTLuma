@@ -178,10 +178,46 @@
             height: 100%;
             object-fit: cover;
         }
+
+        .admin-mobile-header {
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            margin-bottom: 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .mobile-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        @media (max-width: 992px) {
+            .admin-mobile-header { display: block; }
+            .admin-main { padding: 2rem 1rem; }
+            .admin-header { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                gap: 1.5rem; 
+                margin-bottom: 2rem;
+            }
+            .admin-actions { width: 100%; }
+            .admin-actions .btn { flex: 1; }
+        }
     </style>
 </head>
 <body>
     <div class="blob-bg blob-3"></div>
+
+    <!-- Admin Mobile Header -->
+    <header class="admin-mobile-header glass-panel d-none">
+        <div class="container mobile-header-content">
+            <a href="../index.html" class="logo">FTLuma<span class="dot">.</span></a>
+            <div class="mobile-header-actions">
+                <a href="#" onclick="handleLogout()" class="icon-btn text-danger"><i class="ph ph-sign-out"></i></a>
+            </div>
+        </div>
+    </header>
 
     <div class="admin-layout">
         <aside class="admin-sidebar">

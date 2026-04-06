@@ -39,19 +39,53 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Mobile Menu Toggle ---
     const mobileBtn = document.querySelector('.mobile-menu-btn');
     const navLinks = document.querySelector('.nav-links');
+    const body = document.body;
 
     if (mobileBtn && navLinks) {
-        mobileBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('show');
+        const toggleMenu = () => {
+            const isOpen = navLinks.classList.toggle('show');
+            body.classList.toggle('no-scroll', isOpen);
+            
             const icon = mobileBtn.querySelector('i');
-            if (navLinks.classList.contains('show')) {
+            if (isOpen) {
                 icon.classList.remove('ph-list');
                 icon.classList.add('ph-x');
             } else {
                 icon.classList.remove('ph-x');
                 icon.classList.add('ph-list');
             }
+        };
+
+        mobileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
         });
+
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (navLinks.classList.contains('show')) {
+                    toggleMenu();
+                }
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (navLinks.classList.contains('show') && 
+                !navLinks.contains(e.target) && 
+                !mobileBtn.contains(e.target)) {
+                toggleMenu();
+            }
+        });
+    }
+
+    // Add no-scroll CSS dynamically if not present
+    if (!document.getElementById('no-scroll-style')) {
+        const style = document.createElement('style');
+        style.id = 'no-scroll-style';
+        style.textContent = '.no-scroll { overflow: hidden; }';
+        document.head.appendChild(style);
     }
 
     // --- Navbar Scroll Effect ---
