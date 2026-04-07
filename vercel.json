@@ -1,17 +1,26 @@
 {
   "cleanUrls": true,
+  "trailingSlash": true,
   "rewrites": [
     {
       "source": "/admin",
       "destination": "/admin/index.html"
     },
     {
+      "source": "/admin/dashboard",
+      "destination": "/admin/dashboard.html"
+    },
+    {
       "source": "/admin/articles",
       "destination": "/admin/articles.html"
     },
     {
-      "source": "/admin/",
-      "destination": "/admin/index.html"
+      "source": "/admin/authors",
+      "destination": "/admin/authors.html"
+    },
+    {
+      "source": "/admin/settings",
+      "destination": "/admin/settings.html"
     }
   ]
 }

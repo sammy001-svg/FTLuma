@@ -16,7 +16,7 @@
         (async () => {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
-                window.location.href = 'dashboard';
+                window.location.href = '/admin/dashboard';
             }
         })();
     </script>
@@ -183,7 +183,7 @@
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Login to Dashboard <i class="ph ph-arrow-right"></i>';
             } else {
-                window.location.href = 'dashboard';
+                window.location.href = '/admin/dashboard';
             }
         }
         window.handleAuthSumbit = handleAuthSumbit;
