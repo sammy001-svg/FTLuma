@@ -232,18 +232,24 @@ async function initContactForm() {
    Blog Posts - Supabase Rendering
    ========================================================================== */
 async function renderSupabaseArticles() {
-    const postGrid = document.querySelector('.layout-grid');
+    const postGrid = document.querySelector('.layout-grid'); // index.html
+    const articlesHubGrid = document.querySelector('.articles-hub-grid'); // articles.html
     const heroInfo = document.querySelector('.featured-info');
     const heroImg = document.querySelector('#hero-img-placeholder');
     const heroAuthorImg = document.querySelector('#author-img-1');
+    const newArticleBadge = document.querySelector('.hero-content .badge');
     
-    // Only run on index.html or root
-    const isHomePage = window.location.pathname.endsWith('index.html') || 
-                       window.location.pathname.endsWith('index') || 
-                       window.location.pathname.endsWith('/') || 
-                       window.location.pathname === '';
+    // Check if on article page
+    const urlParams = new URLSearchParams(window.location.search);
+    const slug = urlParams.get('slug');
+    const isPostPage = window.location.pathname.endsWith('post.html');
 
-    if (!postGrid && !heroInfo) return;
+    if (isPostPage && slug) {
+        loadSingleArticle(slug);
+        return;
+    }
+
+    if (!postGrid && !heroInfo && !articlesHubGrid) return;
 
     // Fetch articles with joins
     const { data: posts, error } = await supabase
@@ -261,9 +267,17 @@ async function renderSupabaseArticles() {
         return;
     }
 
+    if (!posts || posts.length === 0) return;
+
+    // Handle "New Article Published" Badge on Home Page
+    if (newArticleBadge && posts.length > 0) {
+        const latest = posts[0];
+        newArticleBadge.innerHTML = `<a href="post.html?slug=${latest.slug}" style="color: inherit; text-decoration: none;"><span class="pulse-dot"></span> New: ${latest.title}</a>`;
+    }
+
     // Handle Hero Section
-    if (isHomePage && heroInfo) {
-        const featured = posts.find(p => p.is_featured);
+    if (heroInfo) {
+        const featured = posts.find(p => p.is_featured) || posts[0];
         if (featured) {
             heroInfo.querySelector('h2').textContent = featured.title;
             heroInfo.querySelector('.author span').textContent = featured.authors?.name;
@@ -274,51 +288,101 @@ async function renderSupabaseArticles() {
             heroInfo.querySelector('.date').textContent = dateStr;
             
             const readTimeEl = heroInfo.querySelector('.read-time');
-            if (readTimeEl) readTimeEl.innerHTML = `<i class="ph ph-clock"></i> ${featured.read_time}`;
+            if (readTimeEl) readTimeEl.innerHTML = `<i class="ph ph-clock"></i> ${featured.read_time || '5 min read'}`;
             
             if (heroImg) heroImg.src = featured.featured_image;
             if (heroAuthorImg) heroAuthorImg.src = featured.authors?.avatar_url;
             
             // Link hero to actual article
             const heroLink = heroInfo.closest('a');
-            if (heroLink) heroLink.href = `${featured.slug}`;
+            if (heroLink) heroLink.href = `post.html?slug=${featured.slug}`;
         }
     }
 
-    // Handle Grid
-    if (postGrid) {
-        // Find which posts are already hardcoded to avoid duplicates if needed
-        // For a clean "live" experience, we'll clear and re-render only if there's new data
-        // For now, let's just clear the grid and show dynamic posts
-        postGrid.innerHTML = '';
+    // Handle Grids (Home and Articles Hub)
+    const targetGrid = postGrid || articlesHubGrid;
+    if (targetGrid) {
+        targetGrid.innerHTML = '';
         
-        posts.filter(p => !p.is_featured).forEach(post => {
+        // On home page, maybe skip the featured one if it's already in the hero
+        const displayPosts = postGrid ? posts.filter(p => !p.is_featured).slice(0, 6) : posts;
+
+        displayPosts.forEach(post => {
             const article = document.createElement('article');
             article.className = 'post-card glass-panel fade-in';
             article.innerHTML = `
-                <div class="post-img-wrapper">
-                  <img src="${post.featured_image || 'images/post-1.png'}" alt="Post thumbnail" class="post-img">
-                  <div class="tags">
-                    <span class="tag">${post.categories?.name || 'Finance'}</span>
+                <div class="post-image-wrapper ${articlesHubGrid ? 'post-image' : 'post-img-wrapper'}">
+                  <img src="${post.featured_image || 'images/post-1.png'}" alt="${post.title}" class="post-img">
+                  <div class="tags ${articlesHubGrid ? '' : 'tags'}">
+                    <span class="${articlesHubGrid ? 'post-tag' : 'tag'}">${post.categories?.name || 'Finance'}</span>
                   </div>
                 </div>
                 <div class="post-content">
+                  ${articlesHubGrid ? `
+                  <div class="post-meta">
+                    <span><i class="ph ph-calendar"></i> ${new Date(post.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    <span><i class="ph ph-timer"></i> ${post.read_time || '5 min read'}</span>
+                  </div>
+                  ` : ''}
                   <h3 class="post-title">
-                    <a href="${post.slug}">${post.title}</a>
+                    <a href="post.html?slug=${post.slug}">${post.title}</a>
                   </h3>
                   <p class="post-excerpt">${post.excerpt}</p>
-                  <div class="meta">
-                    <div class="author">
-                      <img src="${post.authors?.avatar_url || 'images/author-1.png'}" alt="Author" class="avatar">
+                  <div class="meta ${articlesHubGrid ? 'post-footer' : ''}">
+                    <div class="${articlesHubGrid ? 'post-author' : 'author'}">
+                      <img src="${post.authors?.avatar_url || 'images/author-1.png'}" alt="${post.authors?.name}" class="avatar">
                       <span>${post.authors?.name || 'FTLuma Team'}</span>
                     </div>
-                    <span class="date">${new Date(post.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    ${articlesHubGrid ? 
+                        `<a href="post.html?slug=${post.slug}" class="read-more">Read More <i class="ph ph-arrow-right"></i></a>` :
+                        `<span class="date">${new Date(post.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>`
+                    }
                   </div>
                 </div>
             `;
-            postGrid.appendChild(article);
+            targetGrid.appendChild(article);
         });
     }
+}
+
+async function loadSingleArticle(slug) {
+    const { data: post, error } = await supabase
+        .from('articles')
+        .select(`
+            *,
+            authors (name, avatar_url, bio),
+            categories (name)
+        `)
+        .eq('slug', slug)
+        .single();
+
+    if (error || !post) {
+        console.error('Error loading article:', error);
+        document.getElementById('article-title').textContent = 'Article Not Found';
+        document.getElementById('article-body').innerHTML = '<p>Sorry, the article you are looking for does not exist.</p>';
+        return;
+    }
+
+    // Populate metadata
+    document.title = `${post.title} | FTLuma`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', post.excerpt);
+
+    // Populate Header
+    document.getElementById('article-category').textContent = post.categories?.name || 'Finance';
+    document.getElementById('article-title').textContent = post.title;
+    document.getElementById('author-name').textContent = post.authors?.name || 'FTLuma Team';
+    document.getElementById('author-avatar').src = post.authors?.avatar_url || 'images/author-1.png';
+    document.getElementById('article-date').textContent = new Date(post.published_at).toLocaleDateString('en-US', { 
+        month: 'short', day: 'numeric', year: 'numeric' 
+    });
+    document.getElementById('read-time').textContent = post.read_time || '5';
+    document.getElementById('featured-image').src = post.featured_image;
+
+    // Populate Body
+    // Assuming content is stored as HTML or plain text with newlines
+    const bodyContainer = document.getElementById('article-body');
+    bodyContainer.innerHTML = post.content;
 }
 
 /* ==========================================================================

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="page-title">Article Title | FTLuma</title>
+    <meta name="description" id="page-description" content="Article description." />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="supabase-config.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="blob-bg blob-1"></div><div class="blob-bg blob-2"></div><div class="blob-bg blob-3"></div>
+    <div class="top-header">
+      <div class="container top-header-content">
+        <ul class="top-header-links">
+          <li><a href="about.html">About Us</a></li><li><a href="disclaimer.html">Disclaimer</a></li><li><a href="contact.html">Contact Us</a></li><li><a href="index.html#more">More <i class="ph ph-caret-down"></i></a></li>
+        </ul>
+      </div>
+    </div>
+    <nav class="navbar glass-effect">
+      <div class="container nav-content">
+        <a href="index" class="logo">FTLuma<span class="dot">.</span></a>
+        <ul class="nav-links">
+          <li><a href="index">Home</a></li>          <li><a href="articles" class="active">Articles</a></li>          <li><a href="topics">Topics</a></li>          <li><a href="about">About</a></li>
+          <li class="mobile-only"><a href="#" class="subscribe-trigger">Subscribe</a></li>
+        </ul>
+        <div class="nav-actions">
+          <button class="icon-btn theme-toggle" aria-label="Toggle dark mode"><i class="ph ph-sun"></i></button><button class="btn btn-primary subscribe-trigger">Subscribe</button><button class="icon-btn mobile-menu-btn d-none" aria-label="Open menu"><i class="ph ph-list"></i></button>
+        </div>
+      </div>
+    </nav>
+    <main class="container">
+      <header class="article-header">
+        <span class="tag" id="article-category">Category</span>
+        <h1 class="hero-title" id="article-title">Loading Article...</h1>
+        <div class="article-meta">
+          <div class="author"><img src="images/author-1.png" alt="Author" class="avatar" id="author-avatar" /> <span id="author-name">Author Name</span></div>
+          <span>•</span><span id="article-date">Date</span><span>•</span><span><i class="ph ph-clock"></i> <span id="read-time">5</span> min read</span>
+        </div>
+      </header>
+      <div class="article-hero"><img src="" alt="Featured Image" id="featured-image" /></div>
+      <article class="article-content" id="article-body">
+        <p>Loading content...</p>
+      </article>
+
+      <section class="comments-section">
+        <div class="comments-header">
+          <h3>Comments (<span class="comment-count">0</span>)</h3>
+        </div>
+        
+        <form class="comment-form glass-panel">
+          <h4>Leave a Reply</h4>
+          <div class="input-group">
+            <input type="text" class="comment-name" placeholder="Your Name" required />
+          </div>
+          <div class="input-group">
+            <textarea class="comment-text" placeholder="Share your thoughts..." rows="4" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Post Comment</button>
+        </form>
+
+        <div class="comments-list">
+          <!-- Comments will be injected here via JS -->
+        </div>
+      </section>
+
+      <section class="newsletter-section section-padding">
+        <div class="newsletter-box glass-panel glow-effect">
+          <div class="newsletter-content">
+            <h2>Enjoyed this article?</h2>
+            <p>Join our newsletter to receive the latest market insights and exclusive resources directly in your inbox.</p>
+          </div>
+            <form class="newsletter-form"><div class="input-group"><i class="ph ph-envelope"></i><input type="email" placeholder="Enter your email address" required /></div><button type="submit" class="btn btn-primary">Subscribe</button></form>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer section-padding">
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">FTLuma<span class="dot">.</span></a>
+          <p>
+            Curating the best insights on global finance, investment strategies,
+            and the future of wealth.
+          </p>
+          <div class="social-links">
+            <a href="#" class="icon-btn" title="Twitter"><i class="ph ph-twitter-logo"></i></a>
+            <a href="#" class="icon-btn" title="GitHub"><i class="ph ph-github-logo"></i></a>
+            <a href="#" class="icon-btn" title="Dribbble"><i class="ph ph-dribbble-logo"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index">Home</a></li>
+            <li><a href="articles">Articles</a></li>
+            <li><a href="topics">Topics</a></li>
+            <li><a href="events">Events</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="contact">Contact</a></li>
+            <li><a href="about">About Us</a></li>
+            <li><a href="disclaimer">Disclaimer</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="disclaimer">Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="container copyright">
+        <p>&copy; <span id="current-year">2026</span> FTLuma Blog. Built for modern creators.</p>
+      </div>
+    </footer>
+    <!-- Subscription Modal -->
+    <div id="subscribe-modal" class="modal-overlay">
+      <div class="modal-content glass-panel fade-in">
+        <button class="modal-close" aria-label="Close modal">
+          <i class="ph ph-x"></i>
+        </button>
+        <div class="modal-header">
+          <div class="modal-icon"><i class="ph ph-envelope-simple-open"></i></div>
+          <h2>Join FTLuma Premium</h2>
+          <p>Get exclusive financial insights and market deep-dives delivered straight to your inbox.</p>
+        </div>
+        <form class="modal-form subscribe-form">
+          <div class="input-group">
+            <i class="ph ph-envelope"></i>
+            <input type="email" placeholder="email@example.com" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Subscribe Now</button>
+        </form>
+        <div class="modal-footer">
+          <p>Join 50,000+ investors. No spam, ever.</p>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
