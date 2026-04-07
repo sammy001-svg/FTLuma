@@ -168,28 +168,46 @@
     <script type="module">
         let currentAuthors = [];
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            await fetchAuthors();
-        });
-
         async function fetchAuthors() {
+            console.log('Fetching authors...');
             const loading = document.getElementById('loading-state');
             const list = document.getElementById('authors-list');
             
-            const { data, error } = await supabase
-                .from('authors')
-                .select('*')
-                .order('name');
+            try {
+                const { data, error } = await supabase
+                    .from('authors')
+                    .select('*')
+                    .order('name');
 
-            loading.style.display = 'none';
+                loading.style.display = 'none';
 
-            if (error) {
-                list.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #ef4444;">Error: ${error.message}</td></tr>`;
-                return;
+                if (error) {
+                    console.error('Supabase error:', error);
+                    list.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #ef4444;">Error: ${error.message}</td></tr>`;
+                    return;
+                }
+
+                if (!data) {
+                    console.warn('No data returned from Supabase');
+                    list.innerHTML = `<tr><td colspan="5" style="text-align:center;">Empty response from server.</td></tr>`;
+                    return;
+                }
+
+                console.log('Authors loaded:', data.length);
+                currentAuthors = data;
+                renderAuthorsTable(data);
+            } catch (err) {
+                console.error('Fetch error:', err);
+                loading.style.display = 'none';
+                list.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #ef4444;">Initialization Error: ${err.message}</td></tr>`;
             }
+        }
 
-            currentAuthors = data;
-            renderAuthorsTable(data);
+        // Run immediately if DOM is already ready, or wait for it
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', fetchAuthors);
+        } else {
+            fetchAuthors();
         }
 
         function renderAuthorsTable(authors) {
@@ -342,6 +360,12 @@
             await supabase.auth.signOut();
             window.location.href = './';
         };
+
+        window.handleAuthorSubmit = handleAuthorSubmit;
+        window.openAuthorModal = openAuthorModal;
+        window.closeAuthorModal = closeAuthorModal;
+        window.editAuthor = editAuthor;
+        window.deleteAuthor = deleteAuthor;
     </script>
 </body>
 </html>
