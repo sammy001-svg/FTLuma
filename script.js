@@ -1,609 +1,347 @@
 /**
- * FTLuma Blog - Main JavaScript File
+ * FTLuma Blog - Unified Main Script
+ * Consolidates all logic (UI + Database) for maximum reliability using Vite-friendly modules.
  */
 
-// --- Supabase Configuration ---
-const SUPABASE_URL = 'https://vkoozoumepnvstljmley.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrb296b3VtZXBudnN0bGptbGV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzOTg1NDYsImV4cCI6MjA5MDk3NDU0Nn0.jexzMstXr6HU_Wa6p1HsQ2qNd5GT3f-QJqdO1SqXRsA';
+(function() {
+    const SUPABASE_URL = 'https://vkoozoumepnvstljmley.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrb296b3VtZXBudnN0bGptbGV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzOTg1NDYsImV4cCI6MjA5MDk3NDU0Nn0.jexzMstXr6HU_Wa6p1HsQ2qNd5GT3f-QJqdO1SqXRsA';
 
-let supabase = null;
+    let supabase = null;
 
-function initSupabase() {
-    if (typeof window !== 'undefined' && window.supabase && window.supabase.createClient) {
-        const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        supabase = client;
-        window.supabase = client; // Expose globally for other scripts
-        console.log('FTLuma: Supabase client initialized');
-        return true;
-    }
-    console.error('FTLuma: Supabase library not found');
-    return false;
-}
+    // --- Initialization ---
+    function init() {
+        console.log('FTLuma: Initializing core...');
+        
+        // 1. UI Helpers (Theme, Menu)
+        initUI();
 
-console.log('FTLuma: script.js starting');
-
-// Wait for DOM to load
-document.addEventListener('DOMContentLoaded', () => {
-
-    // ── Helpers ────────────────────────────────────────────────────────────
-    const html = document.documentElement;
-    const isPostPage = window.location.pathname.endsWith('post.html') || window.location.pathname.endsWith('/post');
-
-    // ── Dark / Light Mode Toggle ────────────────────────────────────────────
-    // Support one or more .theme-toggle buttons on the page
-    const applyTheme = (theme) => {
-        html.setAttribute('data-theme', theme);
-        localStorage.setItem('ftluma-theme', theme);
-        // Update every icon (desktop + mobile menu)
-        document.querySelectorAll('.theme-toggle i').forEach(icon => {
-            icon.className = theme === 'light' ? 'ph ph-moon' : 'ph ph-sun';
-        });
-    };
-
-    // Restore saved preference
-    const savedTheme = localStorage.getItem('ftluma-theme');
-    if (savedTheme) applyTheme(savedTheme);
-
-    // Wire up all toggle buttons
-    document.querySelectorAll('.theme-toggle').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-            applyTheme(next);
-        });
-    });
-
-    // ── Mobile Menu Toggle ─────────────────────────────────────────────────
-    const mobileBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks  = document.querySelector('.nav-links');
-
-    if (mobileBtn && navLinks) {
-        const openMenu = () => {
-            navLinks.classList.add('show');
-            document.body.classList.add('no-scroll');
-            const icon = mobileBtn.querySelector('i');
-            if (icon) { icon.classList.remove('ph-list'); icon.classList.add('ph-x'); }
-        };
-
-        const closeMenu = () => {
-            navLinks.classList.remove('show');
-            document.body.classList.remove('no-scroll');
-            const icon = mobileBtn.querySelector('i');
-            if (icon) { icon.classList.remove('ph-x'); icon.classList.add('ph-list'); }
-        };
-
-        const toggleMenu = () =>
-            navLinks.classList.contains('show') ? closeMenu() : openMenu();
-
-        // Hamburger click
-        mobileBtn.addEventListener('click', e => { e.stopPropagation(); toggleMenu(); });
-
-        // Close when any nav link is tapped
-        navLinks.querySelectorAll('a').forEach(a =>
-            a.addEventListener('click', () => { if (navLinks.classList.contains('show')) closeMenu(); })
-        );
-
-        // Close on Escape key
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape' && navLinks.classList.contains('show')) closeMenu();
-        });
-
-        // Close when tapping outside the panel
-        document.addEventListener('click', e => {
-            if (navLinks.classList.contains('show') &&
-                !navLinks.contains(e.target) &&
-                !mobileBtn.contains(e.target)) {
-                closeMenu();
-            }
-        });
-    }
-
-    // Inject no-scroll style if missing
-    if (!document.getElementById('no-scroll-style')) {
-        const s = document.createElement('style');
-        s.id = 'no-scroll-style';
-        s.textContent = '.no-scroll { overflow: hidden !important; }';
-        document.head.appendChild(s);
-    }
-
-    // ── Navbar Scroll Effect ───────────────────────────────────────────────
-    const navbar = document.querySelector('.navbar');
-    if (navbar) {
-        window.addEventListener('scroll', () => {
-            navbar.classList.toggle('scrolled', window.scrollY > 50);
-        });
-    }
-
-    // --- Filter Buttons (Simulated Logic) ---
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Remove active class from all
-            filterBtns.forEach(b => b.classList.remove('active'));
-            // Add to clicked
-            btn.classList.add('active');
+        // 2. Supabase Initialization
+        if (window.supabase && window.supabase.createClient) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            window.supabaseInstance = supabase;
             
-            // In a real app, this would filter the DOM elements or fetch new data
-            // For now, we simulate a loading/filtering animation
-            const postCards = document.querySelectorAll('.post-card');
-            postCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'scale(0.95)';
-                
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'scale(1)';
-                }, 100 * (index + 1));
+            // 3. Database Features
+            if (isPostPage()) {
+                loadSingleArticle();
+            } else {
+                applySiteSettings();
+                renderArticles();
+                initAuthors();
+            }
+            initSubscription();
+            initContactForm();
+        } else {
+            console.error('FTLuma: Supabase library missing!');
+        }
+    }
+
+    // --- UI Logic ---
+    function isPostPage() {
+        return window.location.pathname.endsWith('post.html') || 
+               window.location.pathname.endsWith('/post') ||
+               window.location.pathname.includes('/post/');
+    }
+
+    function initUI() {
+        const html = document.documentElement;
+        
+        // Theme Toggle
+        const applyTheme = (theme) => {
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('ftluma-theme', theme);
+            document.querySelectorAll('.theme-toggle i').forEach(icon => {
+                icon.className = theme === 'light' ? 'ph ph-moon' : 'ph ph-sun';
+            });
+        };
+        const savedTheme = localStorage.getItem('ftluma-theme');
+        if (savedTheme) applyTheme(savedTheme);
+        document.querySelectorAll('.theme-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                applyTheme(next);
             });
         });
-    });
 
-    // --- Comment Section Logic ---
-    const commentForms = document.querySelectorAll('.comment-form');
-    
-    commentForms.forEach(form => {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Get inputs
-            const nameInput = form.querySelector('.comment-name');
-            const textInput = form.querySelector('.comment-text');
-            
-            const commentsSection = form.closest('.comments-section');
-            const commentsList = commentsSection.querySelector('.comments-list');
-            const commentCountSpan = commentsSection.querySelector('.comment-count');
-            
-            // Basic validation
-            if (!nameInput.value.trim() || !textInput.value.trim()) return;
-            
-            // Format current date e.g., "Oct 26, 2026"
-            const date = new Date();
-            const dateOptions = { month: 'short', day: 'numeric', year: 'numeric' };
-            const formattedDate = date.toLocaleDateString('en-US', dateOptions);
-            
-            // Get first letter of name for avatar
-            const initial = nameInput.value.charAt(0).toUpperCase();
+        // Mobile Menu
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks  = document.querySelector('.nav-links');
+        if (mobileBtn && navLinks) {
+            mobileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                navLinks.classList.toggle('show');
+                const isShow = navLinks.classList.contains('show');
+                document.body.classList.toggle('no-scroll', isShow);
+                const icon = mobileBtn.querySelector('i');
+                if (icon) icon.className = isShow ? 'ph ph-x' : 'ph ph-list';
+            });
+        }
 
-            // Create comment HTML element
-            const commentCard = document.createElement('div');
-            commentCard.className = 'comment-card';
-            commentCard.innerHTML = `
-                <div class="comment-avatar">${initial}</div>
-                <div class="comment-content">
-                    <div class="comment-author-name">${nameInput.value}</div>
-                    <div class="comment-date">${formattedDate}</div>
-                    <div class="comment-text-content">${textInput.value}</div>
+        // Navbar Scroll
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            window.addEventListener('scroll', () => {
+                navbar.classList.toggle('scrolled', window.scrollY > 50);
+            });
+        }
+        
+        // Footer Year
+        const yearSpan = document.getElementById('current-year');
+        if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+    }
+
+    // --- Database Rendering: Articles ---
+    async function renderArticles() {
+        const postGrid = document.querySelector('.layout-grid'); 
+        const articlesHubGrid = document.querySelector('.articles-hub-grid');
+        const target = postGrid || articlesHubGrid;
+        
+        if (!target && !document.getElementById('hero-carousel-track')) return;
+
+        console.log('FTLuma: Fetching articles...');
+        const { data: posts, error } = await supabase
+            .from('articles')
+            .select('*, categories(name), authors(name, avatar_url)')
+            .order('created_at', { ascending: false });
+
+        if (error || !posts) {
+            if (target) target.innerHTML = `<div class="error-msg">Unable to load insights right now.</div>`;
+            return;
+        }
+
+        // Handle Hero Carousel
+        const heroTrack = document.getElementById('hero-carousel-track');
+        const heroDots = document.getElementById('hero-carousel-dots');
+        
+        if (heroTrack && posts.length > 0) {
+            const heroPosts = posts.slice(0, 3);
+            heroTrack.innerHTML = '';
+            if (heroDots) heroDots.innerHTML = '';
+
+            heroPosts.forEach((post, index) => {
+                const dateStr = new Date(post.published_at || post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                
+                const slide = document.createElement('div');
+                slide.className = 'carousel-item';
+                slide.innerHTML = `
+                    <a href="post.html?slug=${post.slug}" class="featured-card glass-panel block-link">
+                        <div class="featured-image">
+                            <img src="${post.featured_image || 'images/hero-1.png'}" alt="${post.title}">
+                            <div class="category-tag">Latest</div>
+                        </div>
+                        <div class="featured-info">
+                            <h2>${post.title}</h2>
+                            <div class="meta">
+                                <div class="author">
+                                    <img src="${post.authors?.avatar_url || 'images/author-1.png'}" class="avatar">
+                                    <span>${post.authors?.name || 'FTLuma Team'}</span>
+                                </div>
+                                <span class="date">${dateStr}</span>
+                                <span class="read-time"><i class="ph ph-clock"></i> ${post.read_time || '5'} min read</span>
+                            </div>
+                            <div class="hero-post-content">${post.content || ''}</div>
+                        </div>
+                    </a>
+                `;
+                heroTrack.appendChild(slide);
+
+                if (heroDots) {
+                    const dot = document.createElement('div');
+                    dot.className = `dot ${index === 0 ? 'active' : ''}`;
+                    dot.addEventListener('click', () => goToSlide(index));
+                    heroDots.appendChild(dot);
+                }
+            });
+
+            let currentSlide = 0;
+            const totalSlides = heroPosts.length;
+            
+            function goToSlide(n) {
+                currentSlide = n;
+                heroTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+                if (heroDots) {
+                    document.querySelectorAll('.carousel-dots .dot').forEach((d, i) => {
+                        d.classList.toggle('active', i === currentSlide);
+                    });
+                }
+            }
+
+            function nextSlide() {
+                goToSlide((currentSlide + 1) % totalSlides);
+            }
+
+            let slideInterval;
+            function startAutoSlide() {
+                if (totalSlides > 1) {
+                    slideInterval = setInterval(nextSlide, 7000);
+                }
+            }
+            function stopAutoSlide() {
+                clearInterval(slideInterval);
+            }
+
+            if (totalSlides > 1) {
+                startAutoSlide();
+                heroTrack.addEventListener('mouseenter', stopAutoSlide);
+                heroTrack.addEventListener('mouseleave', startAutoSlide);
+            }
+
+            const newBadge = document.querySelector('.hero-content .badge');
+            if (newBadge) {
+                const latest = posts[0];
+                newBadge.innerHTML = `<a href="post.html?slug=${latest.slug}" style="color: inherit; text-decoration: none;"><span class="pulse-dot"></span> New: ${latest.title}</a>`;
+            }
+        }
+
+        if (target) {
+            target.innerHTML = '';
+            const publicPosts = posts.filter(p => p.status === 'published');
+            
+            if (publicPosts.length === 0) {
+                target.innerHTML = '<div class="empty-state">No published articles found.</div>';
+                return;
+            }
+
+            publicPosts.forEach(post => {
+                const dateStr = new Date(post.published_at || post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const article = document.createElement('article');
+                article.className = 'post-card glass-panel fade-in';
+                article.innerHTML = `
+                    <div class="post-img-container">
+                        <img src="${post.featured_image || 'images/post-1.png'}" class="post-img">
+                        <div class="post-badges"><span class="post-badge">${post.categories?.name || 'Finance'}</span></div>
+                    </div>
+                    <div class="post-body">
+                        <div class="post-meta-top">
+                            <span class="meta-item"><i class="ph ph-calendar-blank"></i> ${dateStr}</span>
+                            <span class="meta-item"><i class="ph ph-timer"></i> ${post.read_time || '5 min read'}</span>
+                        </div>
+                        <h3 class="post-title"><a href="post.html?slug=${post.slug}">${post.title}</a></h3>
+                        <p class="post-excerpt">${post.excerpt || 'Read full insight...'}</p>
+                        <div class="post-footer">
+                            <div class="author-meta">
+                                <img src="${post.authors?.avatar_url || 'images/author-1.png'}" class="avatar">
+                                <span class="author-name">${post.authors?.name || 'FTLuma Team'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                target.appendChild(article);
+            });
+        }
+    }
+
+    // --- Database Rendering: Authors ---
+    async function initAuthors() {
+        const grid = document.getElementById('authors-grid');
+        if (!grid) return;
+
+        const { data: authors, error } = await supabase.from('authors').select('*').order('name');
+        if (error || !authors) return;
+
+        grid.innerHTML = '';
+        authors.forEach(author => {
+            const card = document.createElement('div');
+            card.className = 'author-card glass-panel fade-in';
+            card.innerHTML = `
+                <img src="${author.avatar_url || 'images/author-1.png'}" class="avatar-lg">
+                <span class="author-role">${author.role || 'Contributor'}</span>
+                <h2>${author.name}</h2>
+                <p class="author-bio">${author.bio || 'Financial expert.'}</p>
+                <div class="author-socials">
+                    <a href="articles.html?author=${author.id}" class="btn btn-outline">View Posts</a>
                 </div>
             `;
-            
-            // Prepend new comment to top of the list
-            commentsList.prepend(commentCard);
-            
-            // Update the count
-            let currentCount = parseInt(commentCountSpan.textContent, 10) || 0;
-            commentCountSpan.textContent = currentCount + 1;
-            
-            // Clear inputs
-            nameInput.value = '';
-            textInput.value = '';
+            grid.appendChild(card);
         });
-    });
-
-    // Initialize Footer Year
-    const yearSpan = document.getElementById('current-year');
-    if (yearSpan) yearSpan.textContent = new Date().getFullYear();
-
-    // Initialize Features
-    if (initSupabase()) {
-        applySiteSettings();
-        renderSupabaseArticles();
-        initSubscription();
-        initContactForm();
-    } else {
-        console.warn('Supabase client not detected. Database features disabled.');
     }
 
-    // Handle Authors Page
-    const authorsGrid = document.getElementById('authors-grid');
-    if (authorsGrid) {
-        renderSupabaseAuthors(authorsGrid);
-    }
-});
+    // --- Site Settings ---
+    async function applySiteSettings() {
+        const { data: settings } = await supabase.from('site_settings').select('*');
+        if (!settings) return;
 
-async function renderSupabaseAuthors(container) {
-    const { data: authors, error } = await supabase
-        .from('authors')
-        .select('*')
-        .order('name');
-
-    if (error) {
-        container.innerHTML = `<div class="error-msg">Error: ${error.message}</div>`;
-        return;
-    }
-
-    if (!authors || authors.length === 0) {
-        container.innerHTML = '<div class="empty-state">No authors found.</div>';
-        return;
-    }
-
-    container.innerHTML = '';
-    authors.forEach(author => {
-        const card = document.createElement('div');
-        card.className = 'author-card glass-panel fade-in';
-        card.innerHTML = `
-            <img src="${author.avatar_url || 'images/author-1.png'}" alt="${author.name}" class="avatar-lg">
-            <span class="author-role">${author.role || 'Contributor'}</span>
-            <h2>${author.name}</h2>
-            <p class="author-bio">${author.bio || 'Financial expert and contributor at FTLuma.'}</p>
-            <div class="author-socials">
-                <a href="#" class="icon-btn"><i class="ph ph-twitter-logo"></i></a>
-                <a href="#" class="icon-btn"><i class="ph ph-linkedin-logo"></i></a>
-                <a href="articles.html?author=${author.id}" class="btn btn-outline">View Posts</a>
-            </div>
-        `;
-        container.appendChild(card);
-    });
-}
-
-/* ==========================================================================
-   Dynamic Site Settings
-   ========================================================================== */
-async function applySiteSettings() {
-    const { data: settings, error } = await supabase.from('site_settings').select('*');
-    if (error || !settings) return;
-
-    settings.forEach(item => {
-        const val = item.value;
-        if (item.key === 'general') {
-            if (val.title) {
+        settings.forEach(item => {
+            const val = item.value;
+            if (item.key === 'general' && val.title) {
                 document.querySelectorAll('.logo').forEach(el => {
                     const dot = el.querySelector('.dot');
                     el.innerHTML = val.title + (dot ? dot.outerHTML : '<span class="dot">.</span>');
                 });
-                document.title = (isPostPage ? '' : val.title + ' | ') + document.title.split('|').pop().trim();
             }
-            if (val.tagline) {
-                const heroSubtitle = document.querySelector('.hero-subtitle');
-                if (heroSubtitle) heroSubtitle.textContent = val.tagline;
-            }
-        } else if (item.key === 'social') {
-            const footerSocials = document.querySelector('.footer-brand .social-links');
-            if (footerSocials) {
-                const twitter = footerSocials.querySelector('[title="Twitter"]');
-                const github = footerSocials.querySelector('[title="GitHub"]');
-                const linkedin = footerSocials.querySelector('[title="LinkedIn"], [title="Dribbble"]'); // Dribbble was placeholder
-                
-                if (twitter && val.twitter) twitter.href = val.twitter;
-                if (github && val.github) github.href = val.github;
-                if (linkedin && val.linkedin) {
-                    linkedin.href = val.linkedin;
-                    linkedin.title = 'LinkedIn';
-                    const icon = linkedin.querySelector('i');
-                    if (icon) icon.className = 'ph ph-linkedin-logo';
-                }
-            }
-        } else if (item.key === 'branding') {
-            if (val.primary_color) {
-                document.documentElement.style.setProperty('--color-primary', val.primary_color);
-                // Also update glass effect hue if possible, or just the primary color
-                const r = parseInt(val.primary_color.slice(1, 3), 16);
-                const g = parseInt(val.primary_color.slice(3, 5), 16);
-                const b = parseInt(val.primary_color.slice(5, 7), 16);
-                document.documentElement.style.setProperty('--glass-bg', `rgba(${r}, ${g}, ${b}, 0.2)`);
-            }
-        }
-    });
-}
+        });
+    }
 
-/* ==========================================================================
-   Contact Form Handler (Supabase)
-   ========================================================================== */
-async function initContactForm() {
-    const contactForm = document.getElementById('contact-form');
-    if (!contactForm) return;
+    // --- Forms ---
+    function initSubscription() {
+        const forms = document.querySelectorAll('.subscribe-form, .newsletter-form');
+        forms.forEach(form => {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = form.querySelector('input[type="email"]')?.value;
+                if (!email) return;
 
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const nameInput = document.getElementById('name');
-        const emailInput = document.getElementById('email');
-        const subjectInput = document.getElementById('subject');
-        const messageInput = document.getElementById('message');
+                const { error } = await supabase.from('newsletter_subscriptions').insert([{ email }]);
+                form.innerHTML = error ? '<p>Error subscribing.</p>' : '<div class="subscribe-success"><h3>Success!</h3></div>';
+            });
+        });
+    }
 
-        const formData = {
-            name: nameInput.value,
-            email: emailInput.value,
-            subject: subjectInput.value,
-            message: messageInput.value
-        };
+    function initContactForm() {
+        const form = document.getElementById('contact-form');
+        if (!form) return;
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+            const { error } = await supabase.from('contact_messages').insert([formData]);
+            if (!error) form.innerHTML = '<h2>Message Sent!</h2>';
+        });
+    }
 
-        // Insert to Supabase
-        const { error } = await supabase
-            .from('contact_messages')
-            .insert([formData]);
+    // --- Single Article ---
+    async function loadSingleArticle() {
+        const params = new URLSearchParams(window.location.search);
+        const slug = params.get('slug');
+        if (!slug) return;
 
-        if (error) {
-            console.error('Contact form error:', error);
-            alert('There was an error sending your message. Please try again.');
+        console.log('FTLuma: Loading article ' + slug);
+        const { data: post, error } = await supabase
+            .from('articles')
+            .select('*, authors(name, avatar_url, bio), categories(name)')
+            .eq('slug', slug)
+            .single();
+
+        if (error || !post) {
+            document.getElementById('article-title').textContent = 'Article Not Found';
             return;
         }
 
-        // Show Success State
-        contactForm.innerHTML = `
-            <div class="subscribe-success" style="padding: 3rem 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                <i class="ph ph-check-circle" style="color: var(--accent); font-size: 4rem; margin-bottom: 1.5rem;"></i>
-                <h2 style="margin-bottom: 0.5rem">Message received!</h2>
-                <p style="color: var(--text-secondary); text-align: center;">Thank you for reaching out, ${formData.name.split(' ')[0]}.<br>Our team will get back to you shortly.</p>
-                <button class="btn btn-primary" style="margin-top: 2.5rem" onclick="window.location.reload()">Send another message</button>
-            </div>
-        `;
-    });
-}
-
-
-/* ==========================================================================
-   Blog Posts - Supabase Rendering
-   ========================================================================== */
-async function renderSupabaseArticles() {
-    console.log('DEBUG: Starting renderSupabaseArticles()');
-    // alert('DEBUG: script.js is running and fetching articles...');
-    const postGrid = document.querySelector('.layout-grid'); // index.html
-    const articlesHubGrid = document.querySelector('.articles-hub-grid'); // articles.html
-    const heroInfo = document.querySelector('.featured-info');
-    const heroImg = document.querySelector('#hero-img-placeholder');
-    const heroAuthorImg = document.querySelector('#author-img-1');
-    const newArticleBadge = document.querySelector('.hero-content .badge');
-    
-    // Check if on article page
-    const urlParams = new URLSearchParams(window.location.search);
-    const slug = urlParams.get('slug');
-
-    if (isPostPage && slug) {
-        loadSingleArticle(slug);
-        return;
-    }
-
-    if (!postGrid && !heroInfo && !articlesHubGrid) return;
-
-    // Fetch articles with joins - Simplified for debug
-    let query = supabase
-        .from('articles')
-        .select(`*, categories(name), authors(name)`)
-        .order('created_at', { ascending: false });
-
-    const { data: allPosts, error } = await query;
-    
-    // Physical alert for undeniable feedback
-    if (allPosts) {
-        alert('DEBUG: script.js found ' + allPosts.length + ' articles in the database.');
-    }
-
-    if (error) {
-        console.error('Error fetching articles:', error);
-        const target = postGrid || articlesHubGrid;
-        if (target) target.innerHTML = `<div class="error-msg" style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #f87171;">
-            <i class="ph ph-warning-circle" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
-            <h3>Unable to load insights</h3>
-            <p>${error.message}</p>
-        </div>`;
-        return;
-    }
-
-    // Filter for display
-    const posts = (allPosts || []).filter(p => p.status === 'published');
-
-    if (!posts || posts.length === 0) {
-        const target = postGrid || articlesHubGrid;
-        if (target) {
-            const statusCounts = (allPosts || []).reduce((acc, p) => {
-                acc[p.status] = (acc[p.status] || 0) + 1;
-                return acc;
-            }, {});
-            const stats = Object.entries(statusCounts).map(([s, c]) => `${s}: ${c}`).join(', ');
-            
-            target.innerHTML = `<div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-secondary);">
-                <i class="ph ph-newspaper-clipping" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
-                <h3>No published articles found</h3>
-                <p>Database check: ${allPosts.length} total posts (${stats || 'None'})</p>
-                <p style="font-size: 0.8rem; margin-top: 1rem;">Note: Only articles with status 'published' appear here.</p>
-            </div>`;
-        }
-        return;
-    }
-
-    console.log('Rendering articles:', posts.map(p => ({ title: p.title, status: p.status, featured: p.is_featured })));
-
-    // Handle "New Article Published" Badge on Home Page
-    if (newArticleBadge && posts.length > 0) {
-        const latest = posts[0];
-        newArticleBadge.innerHTML = `<a href="post.html?slug=${latest.slug}" style="color: inherit; text-decoration: none;"><span class="pulse-dot"></span> New: ${latest.title}</a>`;
-    }
-
-    // Handle Hero Section
-    if (heroInfo) {
-        const featured = posts.find(p => p.is_featured) || posts[0];
-        if (featured) {
-            heroInfo.querySelector('h2').textContent = featured.title;
-            heroInfo.querySelector('.author span').textContent = featured.authors?.name;
-            
-            const dateStr = new Date(featured.published_at).toLocaleDateString('en-US', { 
-                month: 'short', day: 'numeric', year: 'numeric' 
-            });
-            heroInfo.querySelector('.date').textContent = dateStr;
-            
-            const readTimeEl = heroInfo.querySelector('.read-time');
-            if (readTimeEl) readTimeEl.innerHTML = `<i class="ph ph-clock"></i> ${featured.read_time || '5 min read'}`;
-            
-            if (heroImg) heroImg.src = featured.featured_image;
-            if (heroAuthorImg) heroAuthorImg.src = featured.authors?.avatar_url;
-            
-            // Link hero to actual article
-            const heroLink = heroInfo.closest('a');
-            if (heroLink) heroLink.href = `post.html?slug=${featured.slug}`;
-        }
-    }
-
-    // DEBUG: Render ALL articles to see what's in the DB
-    const targetGrid = postGrid || articlesHubGrid;
-    const displayPosts = allPosts; // Temporarily ignore filters
-
-    if (targetGrid && displayPosts) {
-        targetGrid.innerHTML = '';
+        document.getElementById('article-title').textContent = post.title;
+        document.getElementById('article-category').textContent = post.categories?.name || 'Finance';
+        document.getElementById('article-body').innerHTML = post.content;
+        document.getElementById('author-name').textContent = post.authors?.name || 'FTLuma Team';
+        document.getElementById('author-avatar').src = post.authors?.avatar_url || 'images/author-1.png';
+        const dateStr = new Date(post.published_at || post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        document.getElementById('article-date').textContent = dateStr;
+        document.getElementById('featured-image').src = post.featured_image || 'images/post-1.png';
         
-        displayPosts.forEach(post => {
-            const dateStr = new Date(post.published_at || post.created_at).toLocaleDateString('en-US', { 
-                month: 'short', day: 'numeric', year: 'numeric' 
-            });
-            
-            const article = document.createElement('article');
-            article.className = 'post-card glass-panel fade-in';
-            // Add a badge if it's not published or if it's featured
-            const debugBadge = post.status !== 'published' ? `<span class="post-badge" style="background: #f87171;">${post.status}</span>` : '';
-            const featuredBadge = post.is_featured ? `<span class="post-badge" style="background: var(--color-primary); color: #000;">FEATURED</span>` : '';
+        const readTimeEl = document.getElementById('read-time');
+        if (readTimeEl) readTimeEl.textContent = post.read_time || '5';
 
-            article.innerHTML = `
-                <div class="post-img-container">
-                    <img src="${post.featured_image || 'images/post-1.png'}" alt="${post.title}" class="post-img">
-                    <div class="post-badges">
-                        <span class="post-badge">${post.categories?.name || 'Finance'}</span>
-                        ${debugBadge}
-                        ${featuredBadge}
-                    </div>
-                    <div class="post-glimmer"></div>
-                </div>
-                <div class="post-body">
-                    <div class="post-meta-top">
-                        <span class="meta-item"><i class="ph ph-calendar-blank"></i> ${dateStr}</span>
-                        <span class="meta-item"><i class="ph ph-timer"></i> ${post.read_time || '5 min read'}</span>
-                    </div>
-                    <h3 class="post-title">
-                        <a href="post.html?slug=${post.slug}">${post.title}</a>
-                    </h3>
-                    <p class="post-excerpt">${post.excerpt || 'No excerpt.'}</p>
-                    <div class="post-footer">
-                        <div class="author-meta">
-                            <img src="${post.authors?.avatar_url || 'images/author-1.png'}" alt="${post.authors?.name}" class="avatar">
-                            <div class="author-info">
-                                <span class="author-name">${post.authors?.name || 'FTLuma Team'}</span>
-                                <span class="author-role">Contributor</span>
-                            </div>
-                        </div>
-                        <a href="post.html?slug=${post.slug}" class="post-link-btn" title="Read full insight">
-                            <i class="ph ph-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            `;
-            targetGrid.appendChild(article);
-        });
-    }
-}
-
-async function loadSingleArticle(slug) {
-    const { data: post, error } = await supabase
-        .from('articles')
-        .select(`
-            *,
-            authors (name, avatar_url, bio),
-            categories (name)
-        `)
-        .eq('slug', slug)
-        .single();
-
-    if (error || !post) {
-        console.error('Error loading article:', error);
-        document.getElementById('article-title').textContent = 'Article Not Found';
-        document.getElementById('article-body').innerHTML = '<p>Sorry, the article you are looking for does not exist.</p>';
-        return;
+        document.title = `${post.title} | FTLuma`;
+        const metaDesc = document.getElementById('page-description');
+        if (metaDesc) metaDesc.setAttribute('content', post.excerpt || '');
     }
 
-    // Populate metadata
-    document.title = `${post.title} | FTLuma`;
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute('content', post.excerpt);
-
-    // Populate Header
-    document.getElementById('article-category').textContent = post.categories?.name || 'Finance';
-    document.getElementById('article-title').textContent = post.title;
-    document.getElementById('author-name').textContent = post.authors?.name || 'FTLuma Team';
-    document.getElementById('author-avatar').src = post.authors?.avatar_url || 'images/author-1.png';
-    document.getElementById('article-date').textContent = new Date(post.published_at).toLocaleDateString('en-US', { 
-        month: 'short', day: 'numeric', year: 'numeric' 
-    });
-    document.getElementById('read-time').textContent = post.read_time || '5';
-    document.getElementById('featured-image').src = post.featured_image;
-
-    // Populate Body
-    // Assuming content is stored as HTML or plain text with newlines
-    const bodyContainer = document.getElementById('article-body');
-    bodyContainer.innerHTML = post.content;
-}
-
-/* ==========================================================================
-   Subscription System (Supabase)
-   ========================================================================== */
-function initSubscription() {
-    const modal = document.getElementById('subscribe-modal');
-    if (!modal) return;
-
-    const triggers = document.querySelectorAll('.subscribe-trigger');
-    const closeBtn = modal.querySelector('.modal-close');
-    const forms = document.querySelectorAll('.subscribe-form, .newsletter-form');
-
-    const closeModal = () => {
-        modal.classList.remove('show');
-        setTimeout(() => {
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-        }, 300);
-    };
-
-    triggers.forEach(trigger => {
-        trigger.addEventListener('click', (e) => {
-            e.preventDefault();
-            modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('show'), 10);
-            document.body.style.overflow = 'hidden';
-        });
-    });
-
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-
-    forms.forEach(form => {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const emailInput = form.querySelector('input[type="email"]');
-            if (!emailInput) return;
-            
-            const email = emailInput.value;
-
-            if (email) {
-                const { error } = await supabase
-                    .from('newsletter_subscriptions')
-                    .insert([{ email }]);
-
-                if (error) {
-                    console.error('Subscription error:', error);
-                    if (error.code === '23505') {
-                        form.innerHTML = `<div class="subscribe-success"><h3>Already Subscribed!</h3><p>You're already on the list.</p></div>`;
-                    }
-                    return;
-                }
-
-                form.innerHTML = `
-                  <div class="subscribe-success">
-                    <i class="ph ph-check-circle"></i>
-                    <h3>You're in!</h3>
-                    <p>Welcome to FTLuma.</p>
-                  </div>
-                `;
-
-                if (form.classList.contains('modal-form')) {
-                    setTimeout(() => { closeModal(); }, 2500);
-                }
-            }
-        });
-    });
-}
-
+    // --- Bootstrap ---
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
