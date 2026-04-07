@@ -411,6 +411,10 @@
                                     <option value="">Select Author...</option>
                                 </select>
                             </div>
+                            <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="is-featured" style="width: auto;">
+                                <label for="is-featured" style="margin-bottom: 0;">Feature on Home Page</label>
+                            </div>
                             <div class="form-group">
                                 <label for="status">Visibility</label>
                                 <select id="status">
@@ -554,6 +558,7 @@
                 document.getElementById('author').value = article.author_id;
                 document.getElementById('image-url').value = article.featured_image;
                 document.getElementById('status').value = article.status;
+                document.getElementById('is-featured').checked = article.is_featured || false;
                 if (article.featured_image) showPreview(article.featured_image);
             }
         }
@@ -579,8 +584,13 @@
 
             const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
+            const is_featured = document.getElementById('is-featured').checked;
+
             const articleData = {
-                title, slug, excerpt, content, author_id, category_id, status, featured_image,
+                title, slug, excerpt, content, 
+                author_id: author_id || null, 
+                category_id: category_id || null, 
+                status, featured_image, is_featured,
                 published_at: status === 'published' ? new Date().toISOString() : null
             };
 

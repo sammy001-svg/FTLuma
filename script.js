@@ -325,6 +325,8 @@ async function initContactForm() {
    Blog Posts - Supabase Rendering
    ========================================================================== */
 async function renderSupabaseArticles() {
+    console.log('DEBUG: Starting renderSupabaseArticles()');
+    // alert('DEBUG: script.js is running and fetching articles...');
     const postGrid = document.querySelector('.layout-grid'); // index.html
     const articlesHubGrid = document.querySelector('.articles-hub-grid'); // articles.html
     const heroInfo = document.querySelector('.featured-info');
@@ -352,21 +354,48 @@ async function renderSupabaseArticles() {
             categories(name),
             authors(*)
         `)
-        .eq('status', 'published')
-        .order('published_at', { ascending: false });
+        .order('created_at', { ascending: false }); // Order by created_at for debug
 
     if (authorId) {
         query = query.eq('author_id', authorId);
     }
 
-    const { data: posts, error } = await query;
+    const { data: allPosts, error } = await query;
 
     if (error) {
         console.error('Error fetching articles:', error);
+        const target = postGrid || articlesHubGrid;
+        if (target) target.innerHTML = `<div class="error-msg" style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #f87171;">
+            <i class="ph ph-warning-circle" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+            <h3>Unable to load insights</h3>
+            <p>${error.message}</p>
+        </div>`;
         return;
     }
 
-    if (!posts || posts.length === 0) return;
+    // Filter for display
+    const posts = (allPosts || []).filter(p => p.status === 'published');
+
+    if (!posts || posts.length === 0) {
+        const target = postGrid || articlesHubGrid;
+        if (target) {
+            const statusCounts = (allPosts || []).reduce((acc, p) => {
+                acc[p.status] = (acc[p.status] || 0) + 1;
+                return acc;
+            }, {});
+            const stats = Object.entries(statusCounts).map(([s, c]) => `${s}: ${c}`).join(', ');
+            
+            target.innerHTML = `<div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-secondary);">
+                <i class="ph ph-newspaper-clipping" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+                <h3>No published articles found</h3>
+                <p>Database check: ${allPosts.length} total posts (${stats || 'None'})</p>
+                <p style="font-size: 0.8rem; margin-top: 1rem;">Note: Only articles with status 'published' appear here.</p>
+            </div>`;
+        }
+        return;
+    }
+
+    console.log('Rendering articles:', posts.map(p => ({ title: p.title, status: p.status, featured: p.is_featured })));
 
     // Handle "New Article Published" Badge on Home Page
     if (newArticleBadge && posts.length > 0) {
@@ -398,25 +427,31 @@ async function renderSupabaseArticles() {
         }
     }
 
-    // Handle Grids (Home and Articles Hub)
+    // DEBUG: Render ALL articles to see what's in the DB
     const targetGrid = postGrid || articlesHubGrid;
-    if (targetGrid) {
+    const displayPosts = allPosts; // Temporarily ignore filters
+
+    if (targetGrid && displayPosts) {
         targetGrid.innerHTML = '';
         
-        const displayPosts = postGrid ? posts.filter(p => !p.is_featured).slice(0, 6) : posts;
-
         displayPosts.forEach(post => {
-            const dateStr = new Date(post.published_at).toLocaleDateString('en-US', { 
+            const dateStr = new Date(post.published_at || post.created_at).toLocaleDateString('en-US', { 
                 month: 'short', day: 'numeric', year: 'numeric' 
             });
             
             const article = document.createElement('article');
             article.className = 'post-card glass-panel fade-in';
+            // Add a badge if it's not published or if it's featured
+            const debugBadge = post.status !== 'published' ? `<span class="post-badge" style="background: #f87171;">${post.status}</span>` : '';
+            const featuredBadge = post.is_featured ? `<span class="post-badge" style="background: var(--color-primary); color: #000;">FEATURED</span>` : '';
+
             article.innerHTML = `
                 <div class="post-img-container">
                     <img src="${post.featured_image || 'images/post-1.png'}" alt="${post.title}" class="post-img">
                     <div class="post-badges">
                         <span class="post-badge">${post.categories?.name || 'Finance'}</span>
+                        ${debugBadge}
+                        ${featuredBadge}
                     </div>
                     <div class="post-glimmer"></div>
                 </div>
@@ -428,13 +463,13 @@ async function renderSupabaseArticles() {
                     <h3 class="post-title">
                         <a href="post.html?slug=${post.slug}">${post.title}</a>
                     </h3>
-                    <p class="post-excerpt">${post.excerpt}</p>
+                    <p class="post-excerpt">${post.excerpt || 'No excerpt.'}</p>
                     <div class="post-footer">
                         <div class="author-meta">
                             <img src="${post.authors?.avatar_url || 'images/author-1.png'}" alt="${post.authors?.name}" class="avatar">
                             <div class="author-info">
                                 <span class="author-name">${post.authors?.name || 'FTLuma Team'}</span>
-                                <span class="author-role">Financial Analyst</span>
+                                <span class="author-role">Contributor</span>
                             </div>
                         </div>
                         <a href="post.html?slug=${post.slug}" class="post-link-btn" title="Read full insight">
