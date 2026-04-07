@@ -40,6 +40,7 @@ export default defineConfig({
         main: resolve(__dirname, "index.html"),
         about: resolve(__dirname, "about.html"),
         articles: resolve(__dirname, "articles.html"),
+        authors: resolve(__dirname, "authors.html"),
         topics: resolve(__dirname, "topics.html"),
         events: resolve(__dirname, "events.html"),
         contact: resolve(__dirname, "contact.html"),

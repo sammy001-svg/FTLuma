@@ -180,7 +180,48 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.warn('Supabase client not detected. Database features disabled.');
     }
+
+    // Handle Authors Page
+    const authorsGrid = document.getElementById('authors-grid');
+    if (authorsGrid) {
+        renderSupabaseAuthors(authorsGrid);
+    }
 });
+
+async function renderSupabaseAuthors(container) {
+    const { data: authors, error } = await supabase
+        .from('authors')
+        .select('*')
+        .order('name');
+
+    if (error) {
+        container.innerHTML = `<div class="error-msg">Error: ${error.message}</div>`;
+        return;
+    }
+
+    if (!authors || authors.length === 0) {
+        container.innerHTML = '<div class="empty-state">No authors found.</div>';
+        return;
+    }
+
+    container.innerHTML = '';
+    authors.forEach(author => {
+        const card = document.createElement('div');
+        card.className = 'author-card glass-panel fade-in';
+        card.innerHTML = `
+            <img src="${author.avatar_url || 'images/author-1.png'}" alt="${author.name}" class="avatar-lg">
+            <span class="author-role">${author.role || 'Contributor'}</span>
+            <h2>${author.name}</h2>
+            <p class="author-bio">${author.bio || 'Financial expert and contributor at FTLuma.'}</p>
+            <div class="author-socials">
+                <a href="#" class="icon-btn"><i class="ph ph-twitter-logo"></i></a>
+                <a href="#" class="icon-btn"><i class="ph ph-linkedin-logo"></i></a>
+                <a href="articles.html?author=${author.id}" class="btn btn-outline">View Posts</a>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
 
 /* ==========================================================================
    Contact Form Handler (Supabase)
@@ -253,15 +294,22 @@ async function renderSupabaseArticles() {
     if (!postGrid && !heroInfo && !articlesHubGrid) return;
 
     // Fetch articles with joins
-    const { data: posts, error } = await supabase
+    const authorId = urlParams.get('author');
+    let query = supabase
         .from('articles')
         .select(`
             *,
-            authors (name, avatar_url),
-            categories (name)
+            categories(name),
+            authors(*)
         `)
         .eq('status', 'published')
         .order('published_at', { ascending: false });
+
+    if (authorId) {
+        query = query.eq('author_id', authorId);
+    }
+
+    const { data: posts, error } = await query;
 
     if (error) {
         console.error('Error fetching articles:', error);

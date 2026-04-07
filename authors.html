@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FTLuma | Our Authors</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="supabase-config.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="blob-bg blob-1"></div><div class="blob-bg blob-2"></div><div class="blob-bg blob-3"></div>
+    
+    <!-- Top Header -->
+    <div class="top-header">
+      <div class="container top-header-content">
+        <ul class="top-header-links">
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="disclaimer.html">Disclaimer</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="index.html#more">More <i class="ph ph-caret-down"></i></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass-effect">
+      <div class="container nav-content">
+        <a href="index.html" class="logo">FTLuma<span class="dot">.</span></a>
+
+        <ul class="nav-links">
+          <li><a href="index">Home</a></li>
+          <li><a href="articles">Articles</a></li>
+          <li><a href="authors" class="active">Authors</a></li>
+          <li><a href="topics">Topics</a></li>
+          <li><a href="events">Upcoming Events</a></li>
+          <li><a href="about">About</a></li>
+          <li class="mobile-only"><a href="#" class="subscribe-trigger">Subscribe</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button class="icon-btn theme-toggle" aria-label="Toggle dark mode">
+            <i class="ph ph-sun"></i>
+          </button>
+          <button class="btn btn-primary subscribe-trigger">Subscribe</button>
+          <button class="icon-btn mobile-menu-btn d-none" aria-label="Open menu">
+            <i class="ph ph-list"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <section class="section-padding fade-in">
+        <header class="authors-header text-center-max-800">
+          <span class="tag">Meet the Team</span>
+          <h1 class="hero-title">Financial Visionaries</h1>
+          <p class="section-subtitle">The expert minds dedicated to decoding complex markets and empowering your wealth journey.</p>
+        </header>
+
+        <div class="authors-grid" id="authors-grid">
+            <!-- Authors will be injected here via script.js -->
+            <div class="loading-placeholder">Meeting our experts...</div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer section-padding">
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">FTLuma<span class="dot">.</span></a>
+          <p>
+            Curating the best insights on global finance, investment strategies,
+            and the future of wealth.
+          </p>
+          <div class="social-links">
+            <a href="#" class="icon-btn" title="Twitter"><i class="ph ph-twitter-logo"></i></a>
+            <a href="#" class="icon-btn" title="GitHub"><i class="ph ph-github-logo"></i></a>
+            <a href="#" class="icon-btn" title="Dribbble"><i class="ph ph-dribbble-logo"></i></a>
+          </div>
+        </div>
+
+          <div class="footer-links">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="index">Home</a></li>
+              <li><a href="articles">Articles</a></li>
+              <li><a href="authors">Authors</a></li>
+              <li><a href="topics">Topics</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-links">
+            <h4>Legals</h4>
+            <ul>
+              <li><a href="disclaimer">Disclaimer</a></li>
+              <li><a href="disclaimer">Privacy Policy</a></li>
+              <li><a href="disclaimer">Terms of Service</a></li>
+              <li><a href="contact">Contact</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-newsletter">
+            <h4>Stay Ahead</h4>
+            <p>Get weekly market analysis delivered.</p>
+            <form class="newsletter-form">
+              <div class="input-group">
+                <i class="ph ph-envelope"></i>
+                <input type="email" placeholder="email@example.com" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Join</button>
+            </form>
+          </div>
+      </div>
+      
+      <div class="container copyright">
+        <p>&copy; 2026 FTLuma Financial Intelligence. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Subscription Modal -->
+    <div id="subscribe-modal" class="modal">
+      <div class="modal-content glass-panel">
+        <button class="modal-close"><i class="ph ph-x"></i></button>
+        <div class="modal-body">
+          <i class="ph ph-lightning modal-icon"></i>
+          <h3>Join the Vanguard</h3>
+          <p>Get exclusive financial deep-dives before they hit the main feed.</p>
+          <form class="subscribe-form modal-form">
+            <input type="email" placeholder="Your best business email" required>
+            <button type="submit" class="btn btn-primary btn-lg">Subscribe Now</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+    <style>
+        .authors-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+        .authors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+        .author-card {
+            padding: 2.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all var(--transition-normal);
+        }
+        .author-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--color-primary);
+        }
+        .author-card .avatar-lg {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+            border: 4px solid var(--border-color);
+            transition: transform var(--transition-normal);
+            object-fit: cover;
+        }
+        .author-card:hover .avatar-lg {
+            transform: scale(1.1);
+            border-color: var(--color-primary);
+        }
+        .author-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .author-card .author-role {
+            color: var(--color-primary);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.25rem;
+        }
+        .author-card .author-bio {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        .author-card .author-socials {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+        }
+    </style>
+  </body>
+</html>
