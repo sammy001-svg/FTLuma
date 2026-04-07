@@ -1,20 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FTLuma | About Us</title>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
+    <script type="module" src="supabase-config.js"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="blob-bg blob-1"></div><div class="blob-bg blob-2"></div><div class="blob-bg blob-3"></div>
-    
+    <div class="blob-bg blob-1"></div>
+    <div class="blob-bg blob-2"></div>
+    <div class="blob-bg blob-3"></div>
+
     <!-- Top Header -->
     <div class="top-header">
       <div class="container top-header-content">
@@ -22,7 +27,9 @@
           <li><a href="about.html">About Us</a></li>
           <li><a href="disclaimer.html">Disclaimer</a></li>
           <li><a href="contact.html">Contact Us</a></li>
-          <li><a href="index.html#more">More <i class="ph ph-caret-down"></i></a></li>
+          <li>
+            <a href="index.html#more">More <i class="ph ph-caret-down"></i></a>
+          </li>
         </ul>
       </div>
     </div>
@@ -38,7 +45,9 @@
           <li><a href="topics">Topics</a></li>
           <li><a href="events">Upcoming Events</a></li>
           <li><a href="about" class="active">About</a></li>
-          <li class="mobile-only"><a href="#" class="subscribe-trigger">Subscribe</a></li>
+          <li class="mobile-only">
+            <a href="#" class="subscribe-trigger">Subscribe</a>
+          </li>
         </ul>
 
         <div class="nav-actions">
@@ -46,7 +55,10 @@
             <i class="ph ph-sun"></i>
           </button>
           <button class="btn btn-primary subscribe-trigger">Subscribe</button>
-          <button class="icon-btn mobile-menu-btn d-none" aria-label="Open menu">
+          <button
+            class="icon-btn mobile-menu-btn d-none"
+            aria-label="Open menu"
+          >
             <i class="ph ph-list"></i>
           </button>
         </div>
@@ -57,49 +69,78 @@
       <!-- About Hero Section -->
       <section class="about-hero-section section-padding">
         <div class="about-hero-content text-center">
-            <h1 class="hero-title gradient-text">Illuminating the Future of Wealth</h1>
-            <p class="hero-subtitle">At FTLuma, we believe that understanding the intersection of global markets, emerging technologies, and decentralized finance is the key to thriving in tomorrow's economy. Our mission is to curate the most actionable insights for the next generation of investors.</p>
+          <h1 class="hero-title gradient-text">
+            Illuminating the Future of Wealth
+          </h1>
+          <p class="hero-subtitle">
+            At FTLuma, we believe that understanding the intersection of global
+            markets, emerging technologies, and decentralized finance is the key
+            to thriving in tomorrow's economy. Our mission is to curate the most
+            actionable insights for the next generation of investors.
+          </p>
         </div>
       </section>
 
       <!-- The Team Section -->
       <section class="team-section section-padding">
-          <div class="section-header text-center">
-              <h2 class="section-title">Meet Our Experts</h2>
-              <p class="section-subtitle">The minds behind the market analysis.</p>
-          </div>
-          
-          <div class="team-grid">
-              <!-- Team Member 1 -->
-              <div class="team-card glass-panel">
-                  <div class="team-avatar-wrapper">
-                      <img src="images/author-1.png" alt="Sarah Jenkins" class="team-avatar">
-                  </div>
-                  <h3 class="team-name">Sarah Jenkins</h3>
-                  <p class="team-role">Lead Crypto Analyst</p>
-                  <p class="team-bio">Sarah specializes in the macroeconomic impacts of decentralized finance and CBDC rollouts.</p>
-              </div>
+        <div class="section-header text-center">
+          <h2 class="section-title">Meet Our Experts</h2>
+          <p class="section-subtitle">The minds behind the market analysis.</p>
+        </div>
 
-              <!-- Team Member 2 -->
-              <div class="team-card glass-panel">
-                  <div class="team-avatar-wrapper">
-                      <img src="images/author-2.png" alt="David Chen" class="team-avatar">
-                  </div>
-                  <h3 class="team-name">David Chen</h3>
-                  <p class="team-role">Global Markets Strategist</p>
-                  <p class="team-bio">David brings 15 years of institutional experience modeling equity cycles and identifying structural growth trends.</p>
-              </div>
-
-              <!-- Team Member 3 -->
-              <div class="team-card glass-panel">
-                  <div class="team-avatar-wrapper">
-                      <img src="images/author-3.png" alt="Maya Patel" class="team-avatar">
-                  </div>
-                  <h3 class="team-name">Maya Patel</h3>
-                  <p class="team-role">Wealth Management Editor</p>
-                  <p class="team-bio">Maya focuses on tax-efficient strategies and portfolio construction for high-net-worth individuals navigating new fiscal landscapes.</p>
-              </div>
+        <div class="team-grid">
+          <!-- Team Member 1 -->
+          <div class="team-card glass-panel">
+            <div class="team-avatar-wrapper">
+              <img
+                src="images/author-1.png"
+                alt="Sarah Jenkins"
+                class="team-avatar"
+              />
+            </div>
+            <h3 class="team-name">Sarah Jenkins</h3>
+            <p class="team-role">Lead Crypto Analyst</p>
+            <p class="team-bio">
+              Sarah specializes in the macroeconomic impacts of decentralized
+              finance and CBDC rollouts.
+            </p>
           </div>
+
+          <!-- Team Member 2 -->
+          <div class="team-card glass-panel">
+            <div class="team-avatar-wrapper">
+              <img
+                src="images/author-2.png"
+                alt="David Chen"
+                class="team-avatar"
+              />
+            </div>
+            <h3 class="team-name">David Chen</h3>
+            <p class="team-role">Global Markets Strategist</p>
+            <p class="team-bio">
+              David brings 15 years of institutional experience modeling equity
+              cycles and identifying structural growth trends.
+            </p>
+          </div>
+
+          <!-- Team Member 3 -->
+          <div class="team-card glass-panel">
+            <div class="team-avatar-wrapper">
+              <img
+                src="images/author-3.png"
+                alt="Maya Patel"
+                class="team-avatar"
+              />
+            </div>
+            <h3 class="team-name">Maya Patel</h3>
+            <p class="team-role">Wealth Management Editor</p>
+            <p class="team-bio">
+              Maya focuses on tax-efficient strategies and portfolio
+              construction for high-net-worth individuals navigating new fiscal
+              landscapes.
+            </p>
+          </div>
+        </div>
       </section>
 
       <!-- Newsletter Section -->
@@ -107,12 +148,22 @@
         <div class="newsletter-box glass-panel glow-effect">
           <div class="newsletter-content">
             <h2>Stay ahead of the curve</h2>
-            <p>Join 50,000+ subscribers receiving our premium market analysis every morning.</p>
+            <p>
+              Join 50,000+ subscribers receiving our premium market analysis
+              every morning.
+            </p>
             <form class="newsletter-form">
-              <input type="email" placeholder="Enter your email address" required />
+              <input
+                type="email"
+                placeholder="Enter your email address"
+                required
+              />
               <button type="submit" class="btn btn-primary">Subscribe</button>
             </form>
-            <p class="newsletter-terms">By subscribing, you agree to our Terms of Service and Privacy Policy.</p>
+            <p class="newsletter-terms">
+              By subscribing, you agree to our Terms of Service and Privacy
+              Policy.
+            </p>
           </div>
         </div>
       </section>
@@ -127,9 +178,15 @@
             and the future of wealth.
           </p>
           <div class="social-links">
-            <a href="#" class="icon-btn" title="Twitter"><i class="ph ph-twitter-logo"></i></a>
-            <a href="#" class="icon-btn" title="GitHub"><i class="ph ph-github-logo"></i></a>
-            <a href="#" class="icon-btn" title="Dribbble"><i class="ph ph-dribbble-logo"></i></a>
+            <a href="#" class="icon-btn" title="Twitter"
+              ><i class="ph ph-twitter-logo"></i
+            ></a>
+            <a href="#" class="icon-btn" title="GitHub"
+              ><i class="ph ph-github-logo"></i
+            ></a>
+            <a href="#" class="icon-btn" title="Dribbble"
+              ><i class="ph ph-dribbble-logo"></i
+            ></a>
           </div>
         </div>
 
@@ -160,7 +217,10 @@
         </div>
       </div>
       <div class="container copyright">
-        <p>&copy; <span id="current-year">2026</span> FTLuma Blog. Built for modern creators.</p>
+        <p>
+          &copy; <span id="current-year">2026</span> FTLuma Blog. Built for
+          modern creators.
+        </p>
       </div>
     </footer>
 
@@ -171,16 +231,23 @@
           <i class="ph ph-x"></i>
         </button>
         <div class="modal-header">
-          <div class="modal-icon"><i class="ph ph-envelope-simple-open"></i></div>
+          <div class="modal-icon">
+            <i class="ph ph-envelope-simple-open"></i>
+          </div>
           <h2>Join FTLuma Premium</h2>
-          <p>Get exclusive financial insights and market deep-dives delivered straight to your inbox.</p>
+          <p>
+            Get exclusive financial insights and market deep-dives delivered
+            straight to your inbox.
+          </p>
         </div>
         <form class="modal-form subscribe-form">
           <div class="input-group">
             <i class="ph ph-envelope"></i>
-            <input type="email" placeholder="email@example.com" required>
+            <input type="email" placeholder="email@example.com" required />
           </div>
-          <button type="submit" class="btn btn-primary btn-block">Subscribe Now</button>
+          <button type="submit" class="btn btn-primary btn-block">
+            Subscribe Now
+          </button>
         </form>
         <div class="modal-footer">
           <p>Join 50,000+ investors. No spam, ever.</p>
@@ -188,6 +255,6 @@
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>

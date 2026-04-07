@@ -19,7 +19,7 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
+    <script type="module" src="supabase-config.js"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -33,7 +33,9 @@
           <li><a href="about">About Us</a></li>
           <li><a href="disclaimer">Disclaimer</a></li>
           <li><a href="contact">Contact Us</a></li>
-          <li><a href="#more">More <i class="ph ph-caret-down"></i></a></li>
+          <li>
+            <a href="#more">More <i class="ph ph-caret-down"></i></a>
+          </li>
         </ul>
       </div>
     </div>
@@ -48,7 +50,9 @@
           <li><a href="topics">Topics</a></li>
           <li><a href="events">Upcoming Events</a></li>
           <li><a href="about">About</a></li>
-          <li class="mobile-only"><a href="#" class="subscribe-trigger">Subscribe</a></li>
+          <li class="mobile-only">
+            <a href="#" class="subscribe-trigger">Subscribe</a>
+          </li>
         </ul>
 
         <div class="nav-actions">
@@ -78,7 +82,8 @@
             with Confidence.
           </h1>
           <p class="hero-subtitle fade-in-up delay-3">
-            Strategic insights on wealth management, market fluctuations, and the future of global finance, curated for the modern investor.
+            Strategic insights on wealth management, market fluctuations, and
+            the future of global finance, curated for the modern investor.
           </p>
           <div class="hero-actions fade-in-up delay-4">
             <a href="#articles" class="btn btn-primary btn-lg">Start Reading</a>
@@ -86,7 +91,10 @@
           </div>
         </div>
         <div class="hero-visual fade-in delay-5">
-          <a href="featured-post.html" class="featured-card glass-panel block-link">
+          <a
+            href="featured-post.html"
+            class="featured-card glass-panel block-link"
+          >
             <div class="featured-image">
               <img
                 src="images/post-hero.png"
@@ -96,7 +104,9 @@
               <div class="category-tag">Featured</div>
             </div>
             <div class="featured-info">
-              <h2>The Rise of Decentralized Finance: Navigating the 2026 Shift</h2>
+              <h2>
+                The Rise of Decentralized Finance: Navigating the 2026 Shift
+              </h2>
               <div class="meta">
                 <div class="author">
                   <img
@@ -149,7 +159,9 @@
                 >
               </h3>
               <p class="post-excerpt">
-                A deep dive into emerging market trends, interest rate shifts, and geopolitical factors shaping the global financial landscape this year.
+                A deep dive into emerging market trends, interest rate shifts,
+                and geopolitical factors shaping the global financial landscape
+                this year.
               </p>
               <div class="meta">
                 <div class="author">
@@ -186,7 +198,9 @@
                 >
               </h3>
               <p class="post-excerpt">
-                Learn how to build a diversified portfolio that stands the test of time, focusing on long-term growth and tax-efficient investing.
+                Learn how to build a diversified portfolio that stands the test
+                of time, focusing on long-term growth and tax-efficient
+                investing.
               </p>
               <div class="meta">
                 <div class="author">
@@ -218,10 +232,14 @@
             </div>
             <div class="post-content">
               <h3 class="post-title">
-                <a href="post-3.html">The Impact of CBDCs on Global Banking Stability</a>
+                <a href="post-3.html"
+                  >The Impact of CBDCs on Global Banking Stability</a
+                >
               </h3>
               <p class="post-excerpt">
-                Analyzing the transition to Central Bank Digital Currencies and what it means for privacy, transaction speed, and commercial banking.
+                Analyzing the transition to Central Bank Digital Currencies and
+                what it means for privacy, transaction speed, and commercial
+                banking.
               </p>
               <div class="meta">
                 <div class="author">
@@ -279,30 +297,36 @@
             and the future of wealth.
           </p>
           <div class="social-links">
-            <a href="#" class="icon-btn" title="Twitter"><i class="ph ph-twitter-logo"></i></a>
-            <a href="#" class="icon-btn" title="GitHub"><i class="ph ph-github-logo"></i></a>
-            <a href="#" class="icon-btn" title="Dribbble"><i class="ph ph-dribbble-logo"></i></a>
+            <a href="#" class="icon-btn" title="Twitter"
+              ><i class="ph ph-twitter-logo"></i
+            ></a>
+            <a href="#" class="icon-btn" title="GitHub"
+              ><i class="ph ph-github-logo"></i
+            ></a>
+            <a href="#" class="icon-btn" title="Dribbble"
+              ><i class="ph ph-dribbble-logo"></i
+            ></a>
           </div>
         </div>
 
-          <div class="footer-links">
-            <h4>Quick Links</h4>
-            <ul>
-              <li><a href="/">Home</a></li>
-              <li><a href="articles">Articles</a></li>
-              <li><a href="topics">Topics</a></li>
-              <li><a href="events">Events</a></li>
-            </ul>
-          </div>
-          <div class="footer-links">
-            <h4>Support</h4>
-            <ul>
-              <li><a href="contact">Contact</a></li>
-              <li><a href="about">About Us</a></li>
-              <li><a href="disclaimer">Disclaimer</a></li>
-              <li><a href="#">Privacy Policy</a></li>
-            </ul>
-          </div>
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="articles">Articles</a></li>
+            <li><a href="topics">Topics</a></li>
+            <li><a href="events">Events</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="contact">Contact</a></li>
+            <li><a href="about">About Us</a></li>
+            <li><a href="disclaimer">Disclaimer</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
 
         <div class="footer-links">
           <h4>Legal</h4>
@@ -314,7 +338,10 @@
         </div>
       </div>
       <div class="container copyright">
-        <p>&copy; <span id="current-year">2026</span> FTLuma Blog. Built for modern creators.</p>
+        <p>
+          &copy; <span id="current-year">2026</span> FTLuma Blog. Built for
+          modern creators.
+        </p>
       </div>
     </footer>
 
@@ -325,16 +352,23 @@
           <i class="ph ph-x"></i>
         </button>
         <div class="modal-header">
-          <div class="modal-icon"><i class="ph ph-envelope-simple-open"></i></div>
+          <div class="modal-icon">
+            <i class="ph ph-envelope-simple-open"></i>
+          </div>
           <h2>Join FTLuma Premium</h2>
-          <p>Get exclusive financial insights and market deep-dives delivered straight to your inbox.</p>
+          <p>
+            Get exclusive financial insights and market deep-dives delivered
+            straight to your inbox.
+          </p>
         </div>
         <form class="modal-form subscribe-form">
           <div class="input-group">
             <i class="ph ph-envelope"></i>
-            <input type="email" placeholder="email@example.com" required>
+            <input type="email" placeholder="email@example.com" required />
           </div>
-          <button type="submit" class="btn btn-primary btn-block">Subscribe Now</button>
+          <button type="submit" class="btn btn-primary btn-block">
+            Subscribe Now
+          </button>
         </form>
         <div class="modal-footer">
           <p>Join 50,000+ investors. No spam, ever.</p>
@@ -342,6 +376,6 @@
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>
