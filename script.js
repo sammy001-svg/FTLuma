@@ -305,40 +305,44 @@ async function renderSupabaseArticles() {
     if (targetGrid) {
         targetGrid.innerHTML = '';
         
-        // On home page, maybe skip the featured one if it's already in the hero
         const displayPosts = postGrid ? posts.filter(p => !p.is_featured).slice(0, 6) : posts;
 
         displayPosts.forEach(post => {
+            const dateStr = new Date(post.published_at).toLocaleDateString('en-US', { 
+                month: 'short', day: 'numeric', year: 'numeric' 
+            });
+            
             const article = document.createElement('article');
             article.className = 'post-card glass-panel fade-in';
             article.innerHTML = `
-                <div class="post-image-wrapper ${articlesHubGrid ? 'post-image' : 'post-img-wrapper'}">
-                  <img src="${post.featured_image || 'images/post-1.png'}" alt="${post.title}" class="post-img">
-                  <div class="tags ${articlesHubGrid ? '' : 'tags'}">
-                    <span class="${articlesHubGrid ? 'post-tag' : 'tag'}">${post.categories?.name || 'Finance'}</span>
-                  </div>
-                </div>
-                <div class="post-content">
-                  ${articlesHubGrid ? `
-                  <div class="post-meta">
-                    <span><i class="ph ph-calendar"></i> ${new Date(post.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                    <span><i class="ph ph-timer"></i> ${post.read_time || '5 min read'}</span>
-                  </div>
-                  ` : ''}
-                  <h3 class="post-title">
-                    <a href="post.html?slug=${post.slug}">${post.title}</a>
-                  </h3>
-                  <p class="post-excerpt">${post.excerpt}</p>
-                  <div class="meta ${articlesHubGrid ? 'post-footer' : ''}">
-                    <div class="${articlesHubGrid ? 'post-author' : 'author'}">
-                      <img src="${post.authors?.avatar_url || 'images/author-1.png'}" alt="${post.authors?.name}" class="avatar">
-                      <span>${post.authors?.name || 'FTLuma Team'}</span>
+                <div class="post-img-container">
+                    <img src="${post.featured_image || 'images/post-1.png'}" alt="${post.title}" class="post-img">
+                    <div class="post-badges">
+                        <span class="post-badge">${post.categories?.name || 'Finance'}</span>
                     </div>
-                    ${articlesHubGrid ? 
-                        `<a href="post.html?slug=${post.slug}" class="read-more">Read More <i class="ph ph-arrow-right"></i></a>` :
-                        `<span class="date">${new Date(post.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>`
-                    }
-                  </div>
+                    <div class="post-glimmer"></div>
+                </div>
+                <div class="post-body">
+                    <div class="post-meta-top">
+                        <span class="meta-item"><i class="ph ph-calendar-blank"></i> ${dateStr}</span>
+                        <span class="meta-item"><i class="ph ph-timer"></i> ${post.read_time || '5 min read'}</span>
+                    </div>
+                    <h3 class="post-title">
+                        <a href="post.html?slug=${post.slug}">${post.title}</a>
+                    </h3>
+                    <p class="post-excerpt">${post.excerpt}</p>
+                    <div class="post-footer">
+                        <div class="author-meta">
+                            <img src="${post.authors?.avatar_url || 'images/author-1.png'}" alt="${post.authors?.name}" class="avatar">
+                            <div class="author-info">
+                                <span class="author-name">${post.authors?.name || 'FTLuma Team'}</span>
+                                <span class="author-role">Financial Analyst</span>
+                            </div>
+                        </div>
+                        <a href="post.html?slug=${post.slug}" class="post-link-btn" title="Read full insight">
+                            <i class="ph ph-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
             `;
             targetGrid.appendChild(article);
