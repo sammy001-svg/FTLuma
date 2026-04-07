@@ -279,6 +279,7 @@
             .admin-actions { width: 100%; }
             .admin-actions .btn { flex: 1; }
         }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -289,7 +290,7 @@
         <div class="container mobile-header-content">
             <a href="../index.html" class="logo">FTLuma<span class="dot">.</span></a>
             <div class="mobile-header-actions">
-                <a href="#" onclick="handleLogout()" class="icon-btn text-danger"><i class="ph ph-sign-out"></i></a>
+                <a href="#" onclick="handleLogout()" class="icon-btn text-danger" aria-label="Logout"><i class="ph ph-sign-out"></i></a>
             </div>
         </div>
     </header>
@@ -399,7 +400,7 @@
 
                             <!-- Drag & Drop Upload Zone -->
                             <div class="upload-zone" id="upload-zone">
-                                <input type="file" id="image-file" accept="image/*">
+                                <input type="file" id="image-file" accept="image/*" aria-label="Upload featured image">
                                 <span class="upload-zone-icon"><i class="ph ph-upload-simple"></i></span>
                                 <p><strong>Click to upload</strong> or drag &amp; drop</p>
                                 <p>PNG, JPEG, WEBP &mdash; max 5 MB</p>
@@ -415,10 +416,10 @@
 
                             <div class="form-group">
                                 <label for="image-url">Image URL</label>
-                                <input type="text" id="image-url" placeholder="https://… or ../images/post-1.png">
+                                <input type="text" id="image-url" placeholder="https://… or ../images/post-1.png" aria-label="Featured image URL">
                             </div>
 
-                            <div class="image-preview" id="preview-box" style="display:none">
+                            <div class="image-preview hidden" id="preview-box">
                                 <img src="" alt="Preview" class="preview-img-full" id="preview-img">
                             </div>
 
@@ -505,7 +506,7 @@
             const box = document.getElementById('preview-box');
             const img = document.getElementById('preview-img');
             img.src = src;
-            box.style.display = 'block';
+            box.classList.remove('hidden');
         }
 
         // File input change handler
