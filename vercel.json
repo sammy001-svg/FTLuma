@@ -6,6 +6,10 @@
       "destination": "/admin/index.html"
     },
     {
+      "source": "/admin/articles",
+      "destination": "/admin/articles.html"
+    },
+    {
       "source": "/admin/",
       "destination": "/admin/index.html"
     }

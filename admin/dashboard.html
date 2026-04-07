@@ -30,6 +30,7 @@
             display: grid;
             grid-template-columns: 280px 1fr;
             min-height: 100vh;
+            background: #050a14;
         }
         .admin-sidebar {
             background: var(--bg-surface);
@@ -58,25 +59,30 @@
             font-weight: 500;
             transition: all var(--transition-fast);
         }
-        .admin-nav-link:hover, .admin-nav-link.active {
+        .admin-nav-link:hover {
             background: var(--glass-bg);
             color: var(--text-primary);
+        }
+        .admin-nav-link.active {
+            background: rgba(0, 255, 163, 0.1);
+            color: #00ffa3;
+            font-weight: 600;
         }
         .admin-nav-link.logout {
             margin-top: auto;
             color: #f87171;
         }
         .admin-main {
-            padding: 3rem;
-            max-width: 1200px;
+            padding: 40px 60px;
+            max-width: 1400px;
             width: 100%;
-            margin: 0 auto;
+            margin: 0;
         }
         .admin-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 3rem;
+            align-items: flex-start;
+            margin-bottom: 40px;
         }
         .admin-content-card {
             padding: 2rem;
@@ -84,8 +90,9 @@
         }
         .form-grid {
             display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 2.5rem;
+            grid-template-columns: 1fr 380px;
+            gap: 32px;
+            align-items: start;
         }
         .post-form {
             display: flex;
@@ -147,6 +154,7 @@
             from { transform: translateY(-20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+        @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -20px); } to { opacity: 1; transform: translate(-50%, 0); } }
         .image-preview {
             aspect-ratio: 16/9;
             border-radius: var(--border-radius-md);
@@ -181,12 +189,12 @@
 
         /* ── Featured Image Upload ──────────────────────── */
         .upload-zone {
-            border: 2px dashed var(--border-color);
+            border: 2px dashed rgba(255, 255, 255, 0.1);
             border-radius: var(--border-radius-md);
-            padding: 2rem 1rem;
+            padding: 2.5rem 1rem;
             text-align: center;
             cursor: pointer;
-            transition: border-color var(--transition-fast), background var(--transition-fast);
+            transition: all var(--transition-fast);
             position: relative;
         }
         .upload-zone:hover,
@@ -299,17 +307,17 @@
         <aside class="admin-sidebar">
             <a href="../index.html" class="logo">FTLuma<span class="dot">.</span></a>
             <nav class="admin-nav">
-                <a href="#" class="admin-nav-link active">
-                    <i class="ph ph-squares-four"></i> Dashboard
-                </a>
-                <a href="#" class="admin-nav-link">
+                <a href="articles" class="admin-nav-link">
                     <i class="ph ph-article"></i> All Articles
                 </a>
-                <a href="#" class="admin-nav-link">
+                <a href="dashboard" class="admin-nav-link active">
                     <i class="ph ph-plus-circle"></i> New Article
                 </a>
                 <a href="#" class="admin-nav-link">
                     <i class="ph ph-users"></i> Authors
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="ph ph-gear"></i> Settings
                 </a>
                 <a href="#" class="admin-nav-link">
                     <i class="ph ph-chart-line-up"></i> Analytics
@@ -333,12 +341,12 @@
             
             <header class="admin-header">
                 <div>
-                    <h1 class="section-title">Create New Article</h1>
-                    <p class="text-secondary">Fill in the details below to draft your next financial insight.</p>
+                    <h1 class="admin-title" id="page-title">Create New Article</h1>
+                    <p>Fill in the details below to draft your next financial insight.</p>
                 </div>
                 <div class="admin-actions">
-                    <button class="btn btn-outline" onclick="alert('Draft saved!')">Save Draft</button>
-                    <button class="btn btn-primary" onclick="publishArticle()">Publish Article</button>
+                    <button class="btn btn-outline" id="save-draft-btn" onclick="saveDraft()">Save Draft</button>
+                    <button class="btn btn-primary" id="publish-btn" onclick="publishArticle()">Publish Article</button>
                 </div>
             </header>
 
@@ -437,6 +445,45 @@
             window.location.href = './';
         }
 
+        let currentArticleId = new URLSearchParams(window.location.search).get('edit');
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (currentArticleId) {
+                document.getElementById('page-title').textContent = 'Edit Article';
+                document.getElementById('publish-btn').textContent = 'Update Article';
+                await loadArticleData(currentArticleId);
+            }
+        });
+
+        async function loadArticleData(id) {
+            const { data: article, error } = await supabase
+                .from('articles')
+                .select('*')
+                .eq('id', id)
+                .single();
+
+            if (error) {
+                alert('Error loading article: ' + error.message);
+                return;
+            }
+
+            if (article) {
+                document.getElementById('title').value = article.title;
+                document.getElementById('category').value = article.category_id;
+                document.getElementById('excerpt').value = article.excerpt;
+                document.getElementById('content').value = article.content;
+                document.getElementById('author').value = article.author_id;
+                document.getElementById('image-url').value = article.featured_image;
+                document.getElementById('status').value = article.status;
+                if (article.featured_image) showPreview(article.featured_image);
+            }
+        }
+
+        async function saveDraft() {
+            document.getElementById('status').value = 'draft';
+            await publishArticle();
+        }
+
         async function publishArticle() {
             const title = document.getElementById('title').value;
             const category_id = document.getElementById('category').value;
@@ -447,45 +494,37 @@
             const status = document.getElementById('status').value;
 
             if (!title || !content) {
-                alert('Please provide a title and content for your article.');
+                alert('Please provide a title and content.');
                 return;
             }
 
-            // Create slug from title
-            const slug = title.toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)+/g, '');
+            const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
-            const { data, error } = await supabase
-                .from('articles')
-                .insert([{
-                    title,
-                    slug,
-                    excerpt,
-                    content,
-                    author_id,
-                    category_id,
-                    status,
-                    featured_image,
-                    published_at: new Date().toISOString()
-                }]);
+            const articleData = {
+                title, slug, excerpt, content, author_id, category_id, status, featured_image,
+                published_at: status === 'published' ? new Date().toISOString() : null
+            };
 
-            if (error) {
-                console.error('Publish error:', error);
-                alert('Failed to publish article. Check console for details.');
+            let result;
+            if (currentArticleId) {
+                result = await supabase.from('articles').update(articleData).eq('id', currentArticleId);
+            } else {
+                result = await supabase.from('articles').insert([articleData]);
+            }
+
+            if (result.error) {
+                alert('Error: ' + result.error.message);
                 return;
             }
 
-            // Visual feedback
             const msg = document.getElementById('success-msg');
+            msg.innerHTML = `<i class="ph ph-check-circle success-icon-lg"></i> Article ${currentArticleId ? 'updated' : 'published'} successfully!`;
             msg.style.display = 'flex';
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
-            document.getElementById('post-form').reset();
-            
             setTimeout(() => {
-                msg.style.display = 'none';
-            }, 5000);
+                window.location.href = 'articles';
+            }, 2000);
         }
 
         // ── Image upload to Supabase Storage ──────────────────────────────────

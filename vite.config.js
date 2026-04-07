@@ -42,6 +42,8 @@ export default defineConfig({
         post3: resolve(__dirname, 'post-3.html'),
         admin: resolve(__dirname, 'admin/index.html'),
         dashboard: resolve(__dirname, 'admin/dashboard.html'),
+        articles_admin: resolve(__dirname, 'admin/articles.html'),
+        authors_admin: resolve(__dirname, 'admin/authors.html')
       }
     }
   }

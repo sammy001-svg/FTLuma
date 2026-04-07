@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Articles | FTLuma Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../supabase-config.js"></script>
+    <link rel="stylesheet" href="../style.css">
+    <script>
+        (async () => {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (!session || error) window.location.href = './';
+            } catch (err) { window.location.href = './'; }
+        })();
+    </script>
+    <style>
+        .admin-layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; background: #050a14; }
+        .admin-sidebar { background: var(--bg-surface); border-right: 1px solid var(--border-color); padding: 2rem; display: flex; flex-direction: column; gap: 2rem; position: sticky; top: 0; height: 100vh; z-index: 10; }
+        .admin-nav { display: flex; flex-direction: column; gap: 0.5rem; }
+        .admin-nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: var(--text-secondary); font-weight: 500; transition: all 0.3s ease; margin-bottom: 4px; text-decoration: none; }
+        .admin-nav-link:hover { background: var(--glass-bg); color: var(--text-primary); }
+        .admin-nav-link.active { background: rgba(0, 255, 163, 0.1); color: #00ffa3; font-weight: 600; }
+        .admin-main { padding: 40px 60px; width: 100%; margin: 0; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        
+        .articles-table-container { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); color: var(--text-secondary); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        td { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+        .article-info { display: flex; align-items: center; gap: 1rem; }
+        .article-info img { width: 48px; height: 32px; border-radius: 4px; object-fit: cover; background: #000; }
+        .article-title { font-weight: 600; color: var(--text-primary); display: block; margin-bottom: 2px; }
+        .article-slug { font-size: 0.75rem; color: var(--text-secondary); }
+
+        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: capitalize; }
+        .status-published { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .status-draft { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+        .status-private { background: rgba(107, 114, 128, 0.1); color: #9ca3af; }
+
+        .action-btns { display: flex; gap: 0.5rem; }
+        .action-btn { background: none; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 8px; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; }
+        .action-btn:hover { border-color: var(--text-primary); color: var(--text-primary); background: rgba(255, 255, 255, 0.05); }
+        .action-btn.delete:hover { border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.05); }
+        .action-btn.toggle:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+        #loading-state { padding: 4rem; text-align: center; color: var(--text-secondary); }
+        .empty-state { padding: 4rem; text-align: center; }
+        .empty-state i { font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem; }
+
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+        .modal-content { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 20px; padding: 2.5rem; width: 450px; max-width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .modal-icon { width: 64px; height: 64px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem; }
+        .modal-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-primary); }
+        .modal-text { color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.6; }
+        .modal-actions { display: flex; gap: 1rem; justify-content: center; }
+        
+        /* Toast Notification */
+        .toast-container { position: fixed; bottom: 2rem; right: 2rem; z-index: 2000; display: flex; flex-direction: column; gap: 0.75rem; }
+        .toast { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); transform: translateX(120%); transition: transform 0.3s ease; }
+        .toast.active { transform: translateX(0); }
+        .toast.success { border-left: 4px solid #10b981; }
+        .toast.error { border-left: 4px solid #ef4444; }
+        .toast-icon { font-size: 1.25rem; }
+        .toast.success .toast-icon { color: #10b981; }
+        .toast.error .toast-icon { color: #ef4444; }
+
+        .logout { margin-top: auto; color: #f87171 !important; }
+        .admin-header p { color: var(--text-secondary); }
+        .admin-header .btn-primary { text-decoration: none; }
+        .loading-icon { font-size: 2rem; }
+        .loading-text { margin-top: 1rem; }
+        .empty-state-btn { margin-top: 1.5rem; display: inline-block; text-decoration: none; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <a href="../index.html" class="logo">FTLuma<span class="dot">.</span></a>
+            <nav class="admin-nav">
+                <a href="articles" class="admin-nav-link active">
+                    <i class="ph ph-article"></i> All Articles
+                </a>
+                <a href="dashboard" class="admin-nav-link">
+                    <i class="ph ph-plus-circle"></i> New Article
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="ph ph-users"></i> Authors
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="ph ph-gear"></i> Settings
+                </a>
+                <a href="#" onclick="handleLogout()" class="admin-nav-link logout">
+                    <i class="ph ph-sign-out"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div>
+                    <h1 class="admin-title">Articles</h1>
+                    <p>Manage and publish your financial insights.</p>
+                </div>
+                <a href="dashboard" class="btn btn-primary">
+                    <i class="ph ph-plus"></i> New Article
+                </a>
+            </header>
+
+            <div id="articles-list" class="articles-table-container">
+                <div id="loading-state">
+                    <i class="ph ph-circle-notch ph-spin loading-icon"></i>
+                    <p class="loading-text">Fetching articles...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal-content">
+            <div class="modal-icon"><i class="ph ph-trash"></i></div>
+            <h3 class="modal-title">Delete Article?</h3>
+            <p class="modal-text">This action is permanent and cannot be undone. Are you sure you want to remove this insight?</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-primary" id="confirm-delete-btn" style="background: #ef4444; border-color: #ef4444;">Delete Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            window.location.href = './';
+        }
+
+        async function fetchArticles() {
+            const container = document.getElementById('articles-list');
+            
+            const { data: articles, error } = await supabase
+                .from('articles')
+                .select(`*, categories(name), authors(name)`)
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                container.innerHTML = `<div class="empty-state"><p>Error: ${error.message}</p></div>`;
+                return;
+            }
+
+            if (!articles || articles.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="ph ph-article-ny-times"></i>
+                        <h3>No articles found</h3>
+                        <p>Get started by creating your first post.</p>
+                        <a href="dashboard" class="btn btn-primary empty-state-btn">Create Article</a>
+                    </div>
+                `;
+                return;
+            }
+
+            renderTable(articles);
+        }
+
+        function renderTable(articles) {
+            const container = document.getElementById('articles-list');
+            let rows = articles.map(article => {
+                const date = new Date(article.published_at || article.created_at).toLocaleDateString();
+                const statusClass = `status-${article.status || 'draft'}`;
+                
+                return `
+                    <tr>
+                        <td>
+                            <div class="article-info">
+                                <img src="${article.featured_image || '../images/post-1.png'}" alt="">
+                                <div>
+                                    <span class="article-title">${article.title}</span>
+                                    <span class="article-slug">/${article.slug}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${article.categories?.name || 'Uncategorized'}</td>
+                        <td>${article.authors?.name || 'Unknown'}</td>
+                        <td><span class="status-badge ${statusClass}">${article.status || 'draft'}</span></td>
+                        <td>${date}</td>
+                        <td>
+                            <div class="action-btns">
+                                <button onclick="togglePublish('${article.id}', '${article.status}')" class="action-btn toggle" title="Toggle Status">
+                                    <i class="ph ${article.status === 'published' ? 'ph-eye-slash' : 'ph-paper-plane-tilt'}"></i>
+                                </button>
+                                <a href="dashboard?edit=${article.id}" class="action-btn" title="Edit Article">
+                                    <i class="ph ph-pencil-simple"></i>
+                                </a>
+                                <button onclick="deleteArticle('${article.id}')" class="action-btn delete" title="Delete Article">
+                                    <i class="ph ph-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Article</th>
+                            <th>Category</th>
+                            <th>Author</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i class="ph ${type === 'success' ? 'ph-check-circle' : 'ph-warning-circle'} toast-icon"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('active'), 10);
+            setTimeout(() => {
+                toast.classList.remove('active');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        async function togglePublish(id, currentStatus) {
+            const newStatus = currentStatus === 'published' ? 'draft' : 'published';
+            const { error } = await supabase
+                .from('articles')
+                .update({ status: newStatus })
+                .eq('id', id);
+
+            if (error) {
+                showToast(`Error: ${error.message}`, 'error');
+            } else {
+                showToast(`Article set to ${newStatus}`);
+                fetchArticles();
+            }
+        }
+
+        let articleToDelete = null;
+
+        function deleteArticle(id) {
+            articleToDelete = id;
+            document.getElementById('delete-modal').classList.add('active');
+            
+            // Re-bind confirm button to include the ID
+            document.getElementById('confirm-delete-btn').onclick = async () => {
+                const btn = document.getElementById('confirm-delete-btn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Deleting...';
+                btn.disabled = true;
+
+                try {
+                    const { error } = await supabase
+                        .from('articles')
+                        .delete()
+                        .eq('id', articleToDelete);
+
+                    if (error) {
+                        showToast(`Failed to delete: ${error.message}`, 'error');
+                    } else {
+                        showToast('Article deleted successfully');
+                        fetchArticles();
+                    }
+                } catch (err) {
+                    showToast(`Error: ${err.message}`, 'error');
+                } finally {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                    closeDeleteModal();
+                }
+            };
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('delete-modal').classList.remove('active');
+            articleToDelete = null;
+        }
+
+        // Initial fetch
+        document.addEventListener('DOMContentLoaded', fetchArticles);
+    </script>
+</body>
+</html>
