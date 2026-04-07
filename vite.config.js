@@ -45,6 +45,7 @@ export default defineConfig({
         contact: resolve(__dirname, "contact.html"),
         disclaimer: resolve(__dirname, "disclaimer.html"),
         featured: resolve(__dirname, "featured-post.html"),
+        post: resolve(__dirname, "post.html"),
         post1: resolve(__dirname, "post-1.html"),
         post2: resolve(__dirname, "post-2.html"),
         post3: resolve(__dirname, "post-3.html"),

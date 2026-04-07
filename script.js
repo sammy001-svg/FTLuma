@@ -242,7 +242,8 @@ async function renderSupabaseArticles() {
     // Check if on article page
     const urlParams = new URLSearchParams(window.location.search);
     const slug = urlParams.get('slug');
-    const isPostPage = window.location.pathname.endsWith('post.html');
+    const isPostPage = window.location.pathname.endsWith('post.html') || 
+                       window.location.pathname.endsWith('/post');
 
     if (isPostPage && slug) {
         loadSingleArticle(slug);
