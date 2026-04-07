@@ -403,18 +403,12 @@
                             <div class="form-group">
                                 <label for="category">Category</label>
                                 <select id="category">
-                                    <option value="414603f2-3392-40e6-b023-f5d06e866871">Markets</option>
-                                    <option value="7baebabf-87c2-445c-9fa4-fc067a76745c">Wealth</option>
-                                    <option value="31cbc2a4-ff95-422c-bb68-6463cf22b2d3">Crypto</option>
-                                    <option value="f317e0b0-9c69-4586-94a7-8f4739e03972">Insights</option>
+                                    <option value="">Select Category...</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="author">Author</label>
                                 <select id="author">
-                                    <option value="7a44a8ea-1e78-48bc-aa26-79776a748f98">Sarah Jenkins</option>
-                                    <option value="a0b29219-3545-42a5-aee5-819205442c10">David Chen</option>
-                                    <option value="d36397f4-5117-4420-8804-66af77d9d130">Maya Patel</option>
+                                    <option value="">Select Author...</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -491,12 +485,54 @@
                 }
             });
 
+            // New: Fetch dynamic options
+            await loadFormOptions();
+
             if (currentArticleId) {
                 document.getElementById('page-title').textContent = 'Edit Article';
                 document.getElementById('publish-btn').textContent = 'Update Article';
                 await loadArticleData(currentArticleId);
             }
         });
+
+        async function loadFormOptions() {
+            try {
+                // Fetch Categories
+                const { data: categories, error: catError } = await supabase
+                    .from('categories')
+                    .select('id, name')
+                    .order('name');
+                
+                if (catError) throw catError;
+                
+                const catSelect = document.getElementById('category');
+                categories.forEach(cat => {
+                    const opt = document.createElement('option');
+                    opt.value = cat.id;
+                    opt.textContent = cat.name;
+                    catSelect.appendChild(opt);
+                });
+
+                // Fetch Authors
+                const { data: authors, error: authError } = await supabase
+                    .from('authors')
+                    .select('id, name')
+                    .order('name');
+                
+                if (authError) throw authError;
+
+                const authSelect = document.getElementById('author');
+                authors.forEach(auth => {
+                    const opt = document.createElement('option');
+                    opt.value = auth.id;
+                    opt.textContent = auth.name;
+                    authSelect.appendChild(opt);
+                });
+            } catch (err) {
+                console.error('Error loading form options:', err);
+                alert('Warning: Some form options could not be loaded. This may lead to foreign key errors.');
+            }
+        }
 
         async function loadArticleData(id) {
             const { data: article, error } = await supabase
