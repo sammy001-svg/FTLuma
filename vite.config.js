@@ -53,6 +53,7 @@ export default defineConfig({
         admin: resolve(__dirname, "admin/index.html"),
         admin_articles: resolve(__dirname, "admin/articles.html"),
         admin_authors: resolve(__dirname, "admin/authors.html"),
+        admin_settings: resolve(__dirname, "admin/settings.html"),
         admin_dashboard: resolve(__dirname, "admin/dashboard.html"),
         dashboard: resolve(__dirname, "admin/dashboard.html"),
         articles_admin: resolve(__dirname, "admin/articles.html"),

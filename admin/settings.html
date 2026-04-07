@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Settings | FTLuma Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="../supabase-config.js"></script>
+    <link rel="stylesheet" href="../style.css">
+    <script type="module">
+        (async () => {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (!session || error) window.location.href = './';
+            } catch (err) { window.location.href = './'; }
+        })();
+    </script>
+    <style>
+        .admin-layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; background: #050a14; }
+        .admin-sidebar { background: var(--bg-surface); border-right: 1px solid var(--border-color); padding: 2rem; display: flex; flex-direction: column; gap: 2rem; position: sticky; top: 0; height: 100vh; z-index: 10; }
+        .admin-nav { display: flex; flex-direction: column; gap: 0.5rem; }
+        .admin-nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: var(--text-secondary); font-weight: 500; transition: all 0.3s ease; margin-bottom: 4px; text-decoration: none; }
+        .admin-nav-link:hover { background: var(--glass-bg); color: var(--text-primary); }
+        .admin-nav-link.active { background: rgba(0, 255, 163, 0.1); color: #00ffa3; font-weight: 600; }
+        .admin-main { padding: 40px 60px; width: 100%; margin: 0; max-width: 1200px; }
+        .admin-header { margin-bottom: 40px; }
+        
+        .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; }
+        .settings-card { padding: 2rem; height: auto; }
+        .settings-card h2 { font-size: 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; }
+        .settings-card h2 i { color: var(--color-primary); }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-primary); font-weight: 500; font-size: 0.9rem; }
+        .form-group input { width: 100%; padding: 0.75rem 1rem; border-radius: 8px; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); color: var(--text-primary); outline: none; transition: all 0.3s ease; }
+        .form-group input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(0, 255, 163, 0.1); }
+        
+        .settings-footer { margin-top: 3rem; display: flex; justify-content: flex-end; padding-top: 2rem; border-top: 1px solid var(--border-color); }
+        
+        #status-msg { fixed: fixed; bottom: 2rem; right: 2rem; padding: 1rem 2rem; border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--color-primary); color: var(--color-primary); display: none; align-items: center; gap: 0.75rem; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 100; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .logout { margin-top: auto; color: #f87171 !important; }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <a href="../index.html" class="logo">FTLuma<span class="dot">.</span></a>
+            <nav class="admin-nav">
+                <a href="articles" class="admin-nav-link">
+                    <i class="ph ph-article"></i> All Articles
+                </a>
+                <a href="dashboard" class="admin-nav-link">
+                    <i class="ph ph-plus-circle"></i> New Article
+                </a>
+                <a href="authors" class="admin-nav-link">
+                    <i class="ph ph-users"></i> Authors
+                </a>
+                <a href="settings" class="admin-nav-link active">
+                    <i class="ph ph-gear"></i> Settings
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="ph ph-chart-line-up"></i> Analytics
+                </a>
+                <a href="#" onclick="handleLogout()" class="admin-nav-link logout">
+                    <i class="ph ph-sign-out"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Site Settings</h1>
+                <p>Manage your global configuration and site identity.</p>
+            </header>
+
+            <form id="settings-form" onsubmit="saveSettings(event)">
+                <div class="settings-grid">
+                    <!-- General Settings -->
+                    <div class="settings-card glass-panel">
+                        <h2><i class="ph ph-sliders"></i> General</h2>
+                        <div class="form-group">
+                            <label for="site-title">Site Title</label>
+                            <input type="text" id="site-title" placeholder="FTLuma">
+                        </div>
+                        <div class="form-group">
+                            <label for="site-tagline">Site Tagline</label>
+                            <input type="text" id="site-tagline" placeholder="Financial Intelligence & Market Insights">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-email">Contact Email</label>
+                            <input type="email" id="contact-email" placeholder="contact@ftluma.com">
+                        </div>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div class="settings-card glass-panel">
+                        <h2><i class="ph ph-share-network"></i> Social Links</h2>
+                        <div class="form-group">
+                            <label for="social-twitter">Twitter URL</label>
+                            <input type="url" id="social-twitter" placeholder="https://twitter.com/ftluma">
+                        </div>
+                        <div class="form-group">
+                            <label for="social-linkedin">LinkedIn URL</label>
+                            <input type="url" id="social-linkedin" placeholder="https://linkedin.com/company/ftluma">
+                        </div>
+                        <div class="form-group">
+                            <label for="social-github">GitHub URL</label>
+                            <input type="url" id="social-github" placeholder="https://github.com/ftluma">
+                        </div>
+                    </div>
+
+                    <!-- Appearance -->
+                    <div class="settings-card glass-panel">
+                        <h2><i class="ph ph-palette"></i> Appearance</h2>
+                        <div class="form-group">
+                            <label for="brand-primary">Primary Color</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="brand-primary" placeholder="#00ffa3">
+                                <input type="color" id="primary-picker" style="width: 50px; padding: 0.1rem;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="logo-url">Logo Path/URL</label>
+                            <input type="text" id="logo-url" placeholder="images/logo.png">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-footer">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="ph ph-floppy-disk"></i> Save All Changes
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <div id="status-msg">
+        <i class="ph ph-check-circle"></i>
+        <span>Settings updated successfully!</span>
+    </div>
+
+    <script type="module">
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadSettings();
+            
+            // Sync color picker
+            const picker = document.getElementById('primary-picker');
+            const text = document.getElementById('brand-primary');
+            picker.addEventListener('input', () => text.value = picker.value);
+            text.addEventListener('input', () => picker.value = text.value);
+        });
+
+        async function loadSettings() {
+            const { data, error } = await supabase.from('site_settings').select('*');
+            if (error) {
+                console.error('Error loading settings:', error);
+                return;
+            }
+
+            data.forEach(item => {
+                const values = item.value;
+                if (item.key === 'general') {
+                    document.getElementById('site-title').value = values.title || '';
+                    document.getElementById('site-tagline').value = values.tagline || '';
+                    document.getElementById('contact-email').value = values.contact_email || '';
+                } else if (item.key === 'social') {
+                    document.getElementById('social-twitter').value = values.twitter || '';
+                    document.getElementById('social-linkedin').value = values.linkedin || '';
+                    document.getElementById('social-github').value = values.github || '';
+                } else if (item.key === 'branding') {
+                    document.getElementById('brand-primary').value = values.primary_color || '#00ffa3';
+                    document.getElementById('primary-picker').value = values.primary_color || '#00ffa3';
+                    document.getElementById('logo-url').value = values.logo_url || '';
+                }
+            });
+        }
+
+        async function saveSettings(e) {
+            e.preventDefault();
+            
+            const settings = [
+                {
+                    key: 'general',
+                    value: {
+                        title: document.getElementById('site-title').value,
+                        tagline: document.getElementById('site-tagline').value,
+                        contact_email: document.getElementById('contact-email').value
+                    }
+                },
+                {
+                    key: 'social',
+                    value: {
+                        twitter: document.getElementById('social-twitter').value,
+                        linkedin: document.getElementById('social-linkedin').value,
+                        github: document.getElementById('social-github').value
+                    }
+                },
+                {
+                    key: 'branding',
+                    value: {
+                        primary_color: document.getElementById('brand-primary').value,
+                        logo_url: document.getElementById('logo-url').value
+                    }
+                }
+            ];
+
+            const { error } = await supabase.from('site_settings').upsert(settings);
+
+            if (error) {
+                alert('Error saving settings: ' + error.message);
+                return;
+            }
+
+            const msg = document.getElementById('status-msg');
+            msg.style.display = 'flex';
+            setTimeout(() => msg.style.display = 'none', 3000);
+        }
+
+        window.handleLogout = async function() {
+            await supabase.auth.signOut();
+            window.location.href = './';
+        };
+        window.saveSettings = saveSettings;
+    </script>
+</body>
+</html>
