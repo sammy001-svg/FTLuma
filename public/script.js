@@ -173,9 +173,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
     // Initialize Features
-    renderSupabaseArticles();
-    initSubscription();
-    initContactForm();
+    if (typeof supabase !== 'undefined') {
+        renderSupabaseArticles();
+        initSubscription();
+        initContactForm();
+    } else {
+        console.warn('Supabase client not detected. Database features disabled.');
+    }
 });
 
 /* ==========================================================================
