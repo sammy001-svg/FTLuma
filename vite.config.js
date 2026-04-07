@@ -43,6 +43,7 @@ export default defineConfig({
         authors: resolve(__dirname, "authors.html"),
         topics: resolve(__dirname, "topics.html"),
         events: resolve(__dirname, "events.html"),
+        game: resolve(__dirname, "game.html"),
         contact: resolve(__dirname, "contact.html"),
         disclaimer: resolve(__dirname, "disclaimer.html"),
         featured: resolve(__dirname, "featured-post.html"),

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Financial Games | FTLuma</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="supabase-config.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Background Blobs -->
+    <div class="blob-bg blob-1"></div>
+    <div class="blob-bg blob-2"></div>
+    <div class="blob-bg blob-3"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass-effect">
+      <div class="container nav-content">
+        <a href="index.html" class="logo">FTLuma<span class="dot">.</span></a>
+
+        <ul class="nav-links">
+          <li><a href="index">Home</a></li>
+          <li><a href="articles">Articles</a></li>
+          <li><a href="topics">Topics</a></li>
+          <li><a href="events">Upcoming Events</a></li>
+          <li><a href="game" class="active">Game</a></li>
+          <li><a href="about">About</a></li>
+          <li class="mobile-only"><a href="#" class="subscribe-trigger">Subscribe</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button class="icon-btn theme-toggle" aria-label="Toggle dark mode">
+            <i class="ph ph-sun"></i>
+          </button>
+          <button class="btn btn-primary subscribe-trigger d-none-mobile">Subscribe</button>
+          <button class="icon-btn mobile-menu-toggle d-none" aria-label="Toggle menu">
+            <i class="ph ph-list"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main style="padding-top: 120px; min-height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center;">
+      <div class="container">
+        <div class="glass-panel" style="padding: 4rem; max-width: 800px; margin: 0 auto;">
+          <div style="font-size: 4rem; margin-bottom: 2rem;">🎮</div>
+          <h1 class="gradient-text">Upcoming Financial Game</h1>
+          <p style="font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem;">
+            We're building something exciting! Test your financial intelligence and market strategy in our upcoming interactive experience.
+          </p>
+          <div class="pulse-container">
+            <span class="status-badge" style="background: rgba(0, 255, 163, 0.1); color: var(--color-primary); padding: 0.5rem 1.5rem; border-radius: 2rem; font-weight: 600;">COMING SOON</span>
+          </div>
+          <br><br>
+          <a href="index.html" class="btn btn-primary">Back to Home</a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-content">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">FTLuma<span class="dot">.</span></a>
+          <p>Financial intelligence for the modern investor. Strategic insights, market analysis, and wealth management tools.</p>
+          <div class="social-links">
+            <a href="#" class="icon-btn" title="Twitter"><i class="ph ph-twitter-logo"></i></a>
+            <a href="#" class="icon-btn" title="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>
+            <a href="#" class="icon-btn" title="GitHub"><i class="ph ph-github-logo"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <div class="copyright">&copy; <span id="current-year">2026</span> FTLuma. All rights reserved.</div>
+        <div class="footer-legal">
+          <a href="disclaimer">Disclaimer</a>
+          <a href="contact">Privacy Policy</a>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
