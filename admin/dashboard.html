@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="module" src="../supabase-config.js"></script>
     <link rel="stylesheet" href="../style.css">
-    <script>
+    <script type="module">
         // Secure authentication check
         (async () => {
             try {
@@ -439,7 +439,7 @@
     </div>
 
     <script type="module" src="../script.js"></script>
-    <script>
+    <script type="module">
         async function handleLogout() {
             await supabase.auth.signOut();
             window.location.href = './';
@@ -593,6 +593,10 @@
         document.getElementById('image-url').addEventListener('input', function(e) {
             if (e.target.value) showPreview(e.target.value);
         });
+
+        window.handleLogout = handleLogout;
+        window.saveDraft = saveDraft;
+        window.publishArticle = publishArticle;
     </script>
 </body>
 </html>

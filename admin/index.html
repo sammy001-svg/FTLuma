@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="module" src="../supabase-config.js"></script>
     <link rel="stylesheet" href="../style.css">
-    <script>
+    <script type="module">
         // Check if user is already logged in
         (async () => {
             const { data: { session } } = await supabase.auth.getSession();
@@ -163,7 +163,7 @@
     </main>
 
     <script type="module" src="../script.js"></script>
-    <script>
+    <script type="module">
         async function handleAuthSumbit(e) {
             e.preventDefault();
             const email = document.getElementById('username').value;
@@ -186,6 +186,7 @@
                 window.location.href = 'dashboard';
             }
         }
+        window.handleAuthSumbit = handleAuthSumbit;
     </script>
 </body>
 </html>

@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="module" src="../supabase-config.js"></script>
     <link rel="stylesheet" href="../style.css">
-    <script>
+    <script type="module">
         (async () => {
             try {
                 const { data: { session }, error } = await supabase.auth.getSession();
@@ -144,7 +144,7 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toast-container"></div>
 
-    <script>
+    <script type="module">
         async function handleLogout() {
             await supabase.auth.signOut();
             window.location.href = './';
@@ -306,6 +306,11 @@
 
         // Initial fetch
         document.addEventListener('DOMContentLoaded', fetchArticles);
+
+        window.handleLogout = handleLogout;
+        window.togglePublish = togglePublish;
+        window.deleteArticle = deleteArticle;
+        window.closeDeleteModal = closeDeleteModal;
     </script>
 </body>
 </html>
