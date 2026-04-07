@@ -3,13 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script>
-      window.onerror = function(msg, url, line, col, error) {
-        alert("CRITICAL ERROR: " + msg + "\nAt: " + url + ":" + line + ":" + col);
-        return false;
-      };
-      console.log("FTLuma: Error interceptor active");
-    </script>
     <title>FTLuma | Modern Insights & Perspectives</title>
     <meta
       name="description"
@@ -106,39 +99,17 @@
           </div>
         </div>
         <div class="hero-visual fade-in delay-5">
-          <a
-            href="featured-post.html"
-            class="featured-card glass-panel block-link"
-          >
-            <div class="featured-image">
-              <img
-                src="images/post-hero.png"
-                alt="Featured article cover"
-                id="hero-img-placeholder"
-              />
-              <div class="category-tag">Featured</div>
-            </div>
-            <div class="featured-info">
-              <h2>
-                The Rise of Decentralized Finance: Navigating the 2026 Shift
-              </h2>
-              <div class="meta">
-                <div class="author">
-                  <img
-                    src="images/author-1.png"
-                    alt="Author"
-                    class="avatar"
-                    id="author-img-1"
-                  />
-                  <span>Sarah Jenkins</span>
+          <div class="carousel-container">
+            <div class="carousel-track" id="hero-carousel-track">
+              <!-- Injected via JS -->
+              <div class="featured-card glass-panel">
+                <div class="featured-info">
+                  <h2>Loading latest insights...</h2>
                 </div>
-                <span class="date">Oct 24, 2026</span>
-                <span class="read-time"
-                  ><i class="ph ph-clock"></i> 5 min read</span
-                >
               </div>
             </div>
-          </a>
+            <div class="carousel-dots" id="hero-carousel-dots"></div>
+          </div>
         </div>
       </section>
 

@@ -31,6 +31,10 @@
             }
             initSubscription();
             initContactForm();
+            
+            // Clean up old scripts if any
+            const oldScript = document.querySelector('script[src="script.js"]');
+            if (oldScript) oldScript.remove();
         } else {
             console.error('FTLuma: Supabase library missing!');
         }
@@ -107,13 +111,95 @@
             return;
         }
 
-        // Handle Hero
-        if (heroInfo && posts.length > 0) {
-            const featured = posts.find(p => p.is_featured && p.status === 'published') || posts[0];
-            heroInfo.querySelector('h2').textContent = featured.title;
-            heroInfo.querySelector('.author span').textContent = featured.authors?.name || 'FTLuma Team';
-            const heroLink = heroInfo.closest('a');
-            if (heroLink) heroLink.href = `post.html?slug=${featured.slug}`;
+        // Handle Hero Carousel
+        const heroTrack = document.getElementById('hero-carousel-track');
+        const heroDots = document.getElementById('hero-carousel-dots');
+        
+        if (heroTrack && posts.length > 0) {
+            const heroPosts = posts.slice(0, 3); // Get latest 3
+            heroTrack.innerHTML = '';
+            if (heroDots) heroDots.innerHTML = '';
+
+            heroPosts.forEach((post, index) => {
+                const dateStr = new Date(post.published_at || post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                
+                const slide = document.createElement('div');
+                slide.className = 'carousel-item';
+                slide.innerHTML = `
+                    <a href="post.html?slug=${post.slug}" class="featured-card glass-panel block-link">
+                        <div class="featured-image">
+                            <img src="${post.featured_image || 'images/hero-1.png'}" alt="${post.title}">
+                            <div class="category-tag">Latest</div>
+                        </div>
+                        <div class="featured-info">
+                            <h2>${post.title}</h2>
+                            <div class="meta">
+                                <div class="author">
+                                    <img src="${post.authors?.avatar_url || 'images/author-1.png'}" class="avatar">
+                                    <span>${post.authors?.name || 'FTLuma Team'}</span>
+                                </div>
+                                <span class="date">${dateStr}</span>
+                                <span class="read-time"><i class="ph ph-clock"></i> ${post.read_time || '5'} min read</span>
+                            </div>
+                            <div class="hero-post-content">${post.content || ''}</div>
+                        </div>
+                    </a>
+                `;
+                heroTrack.appendChild(slide);
+
+                // Add dot
+                if (heroDots) {
+                    const dot = document.createElement('div');
+                    dot.className = `dot ${index === 0 ? 'active' : ''}`;
+                    dot.addEventListener('click', () => goToSlide(index));
+                    heroDots.appendChild(dot);
+                }
+            });
+
+            // Start Carousel Animation
+            let currentSlide = 0;
+            const totalSlides = heroPosts.length;
+            
+            function goToSlide(n) {
+                currentSlide = n;
+                heroTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+                
+                // Update dots
+                if (heroDots) {
+                    document.querySelectorAll('.carousel-dots .dot').forEach((d, i) => {
+                        d.classList.toggle('active', i === currentSlide);
+                    });
+                }
+            }
+
+            function nextSlide() {
+                goToSlide((currentSlide + 1) % totalSlides);
+            }
+
+            // Auto slide every 5s
+            let slideInterval;
+            function startAutoSlide() {
+                if (totalSlides > 1) {
+                    slideInterval = setInterval(nextSlide, 7000); // 7s for longer reading
+                }
+            }
+            function stopAutoSlide() {
+                clearInterval(slideInterval);
+            }
+
+            if (totalSlides > 1) {
+                startAutoSlide();
+                // Pause on hover
+                heroTrack.addEventListener('mouseenter', stopAutoSlide);
+                heroTrack.addEventListener('mouseleave', startAutoSlide);
+            }
+
+            // Also update the "New Badge" in the hero content area
+            const newBadge = document.querySelector('.hero-content .badge');
+            if (newBadge) {
+                const latest = posts[0];
+                newBadge.innerHTML = `<a href="post.html?slug=${latest.slug}" style="color: inherit; text-decoration: none;"><span class="pulse-dot"></span> New: ${latest.title}</a>`;
+            }
         }
 
         if (target) {
