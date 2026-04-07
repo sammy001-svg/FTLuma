@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Helpers ────────────────────────────────────────────────────────────
     const html = document.documentElement;
+    const isPostPage = window.location.pathname.endsWith('post.html') || window.location.pathname.endsWith('/post');
 
     // ── Dark / Light Mode Toggle ────────────────────────────────────────────
     // Support one or more .theme-toggle buttons on the page
@@ -174,6 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize Features
     if (typeof supabase !== 'undefined') {
+        applySiteSettings();
         renderSupabaseArticles();
         initSubscription();
         initContactForm();
@@ -220,6 +222,56 @@ async function renderSupabaseAuthors(container) {
             </div>
         `;
         container.appendChild(card);
+    });
+}
+
+/* ==========================================================================
+   Dynamic Site Settings
+   ========================================================================== */
+async function applySiteSettings() {
+    const { data: settings, error } = await supabase.from('site_settings').select('*');
+    if (error || !settings) return;
+
+    settings.forEach(item => {
+        const val = item.value;
+        if (item.key === 'general') {
+            if (val.title) {
+                document.querySelectorAll('.logo').forEach(el => {
+                    const dot = el.querySelector('.dot');
+                    el.innerHTML = val.title + (dot ? dot.outerHTML : '<span class="dot">.</span>');
+                });
+                document.title = (isPostPage ? '' : val.title + ' | ') + document.title.split('|').pop().trim();
+            }
+            if (val.tagline) {
+                const heroSubtitle = document.querySelector('.hero-subtitle');
+                if (heroSubtitle) heroSubtitle.textContent = val.tagline;
+            }
+        } else if (item.key === 'social') {
+            const footerSocials = document.querySelector('.footer-brand .social-links');
+            if (footerSocials) {
+                const twitter = footerSocials.querySelector('[title="Twitter"]');
+                const github = footerSocials.querySelector('[title="GitHub"]');
+                const linkedin = footerSocials.querySelector('[title="LinkedIn"], [title="Dribbble"]'); // Dribbble was placeholder
+                
+                if (twitter && val.twitter) twitter.href = val.twitter;
+                if (github && val.github) github.href = val.github;
+                if (linkedin && val.linkedin) {
+                    linkedin.href = val.linkedin;
+                    linkedin.title = 'LinkedIn';
+                    const icon = linkedin.querySelector('i');
+                    if (icon) icon.className = 'ph ph-linkedin-logo';
+                }
+            }
+        } else if (item.key === 'branding') {
+            if (val.primary_color) {
+                document.documentElement.style.setProperty('--color-primary', val.primary_color);
+                // Also update glass effect hue if possible, or just the primary color
+                const r = parseInt(val.primary_color.slice(1, 3), 16);
+                const g = parseInt(val.primary_color.slice(3, 5), 16);
+                const b = parseInt(val.primary_color.slice(5, 7), 16);
+                document.documentElement.style.setProperty('--glass-bg', `rgba(${r}, ${g}, ${b}, 0.2)`);
+            }
+        }
     });
 }
 
@@ -283,8 +335,6 @@ async function renderSupabaseArticles() {
     // Check if on article page
     const urlParams = new URLSearchParams(window.location.search);
     const slug = urlParams.get('slug');
-    const isPostPage = window.location.pathname.endsWith('post.html') || 
-                       window.location.pathname.endsWith('/post');
 
     if (isPostPage && slug) {
         loadSingleArticle(slug);
