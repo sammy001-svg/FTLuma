@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Authors | FTLuma Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="../supabase-config.js"></script>
+    <link rel="stylesheet" href="../style.css">
+    <script type="module">
+        (async () => {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (!session || error) window.location.href = './';
+            } catch (err) { window.location.href = './'; }
+        })();
+    </script>
+    <style>
+        .admin-layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; background: #050a14; }
+        .admin-sidebar { background: var(--bg-surface); border-right: 1px solid var(--border-color); padding: 2rem; display: flex; flex-direction: column; gap: 2rem; position: sticky; top: 0; height: 100vh; z-index: 10; }
+        .admin-nav { display: flex; flex-direction: column; gap: 0.5rem; }
+        .admin-nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: var(--text-secondary); font-weight: 500; transition: all 0.3s ease; margin-bottom: 4px; text-decoration: none; }
+        .admin-nav-link:hover { background: var(--glass-bg); color: var(--text-primary); }
+        .admin-nav-link.active { background: rgba(0, 255, 163, 0.1); color: #00ffa3; font-weight: 600; }
+        .admin-main { padding: 40px 60px; width: 100%; margin: 0; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        
+        .authors-table-container { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--border-radius-lg); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); color: var(--text-secondary); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        td { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+        .author-info { display: flex; align-items: center; gap: 1rem; }
+        .author-info img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #000; border: 2px solid var(--border-color); }
+        .author-name { font-weight: 600; color: var(--text-primary); display: block; }
+        .author-role-label { font-size: 0.75rem; color: var(--color-primary); font-weight: 600; text-transform: uppercase; }
+
+        .action-btns { display: flex; gap: 0.5rem; }
+        .action-btn { background: none; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 8px; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; }
+        .action-btn:hover { border-color: var(--text-primary); color: var(--text-primary); background: rgba(255, 255, 255, 0.05); }
+        .action-btn.delete:hover { border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.05); }
+
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 20px; padding: 2.5rem; width: 500px; max-width: 90%; position: relative; }
+        .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.5rem; }
+        
+        .form-group { margin-bottom: 1.5rem; text-align: left; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--text-primary); font-weight: 500; }
+        .form-group input, .form-group textarea { width: 100%; padding: 0.75rem 1rem; border-radius: 8px; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); color: var(--text-primary); outline: none; }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--color-primary); }
+        .form-group textarea { height: 100px; resize: none; }
+
+        .logout { margin-top: auto; color: #f87171 !important; }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <a href="../index.html" class="logo">FTLuma<span class="dot">.</span></a>
+            <nav class="admin-nav">
+                <a href="articles" class="admin-nav-link">
+                    <i class="ph ph-article"></i> All Articles
+                </a>
+                <a href="dashboard" class="admin-nav-link">
+                    <i class="ph ph-plus-circle"></i> New Article
+                </a>
+                <a href="authors" class="admin-nav-link active">
+                    <i class="ph ph-users"></i> Authors
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="ph ph-gear"></i> Settings
+                </a>
+                <a href="#" class="admin-nav-link">
+                    <i class="ph ph-chart-line-up"></i> Analytics
+                </a>
+                <a href="#" onclick="handleLogout()" class="admin-nav-link logout">
+                    <i class="ph ph-sign-out"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div>
+                    <h1>Manage Authors</h1>
+                    <p>Curate the list of experts contributing to FTLuma.</p>
+                </div>
+                <button class="btn btn-primary" onclick="openAuthorModal()">
+                    <i class="ph ph-user-plus"></i> Add New Author
+                </button>
+            </header>
+
+            <div class="authors-table-container glass-panel">
+                <table id="authors-table">
+                    <thead>
+                        <tr>
+                            <th>Author</th>
+                            <th>Role</th>
+                            <th>Bio</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="authors-list">
+                        <!-- Content via JS -->
+                    </tbody>
+                </table>
+                <div id="loading-state">
+                    <i class="ph ph-circle-notch loading-icon spin"></i>
+                    <p class="loading-text">Fetching authors list...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Author Modal -->
+    <div class="modal-overlay" id="author-modal">
+        <div class="modal-content glass-panel">
+            <button class="modal-close" onclick="closeAuthorModal()"><i class="ph ph-x"></i></button>
+            <h2 id="modal-title">Add New Author</h2>
+            <form id="author-form" onsubmit="handleAuthorSubmit(event)">
+                <input type="hidden" id="author-id">
+                <div class="form-group">
+                    <label for="author-name">Full Name</label>
+                    <input type="text" id="author-name" required placeholder="e.g. Sarah Jenkins">
+                </div>
+                <div class="form-group">
+                    <label for="author-role">Role</label>
+                    <input type="text" id="author-role" required placeholder="e.g. Senior Analyst">
+                </div>
+                <div class="form-group">
+                    <label for="author-avatar">Avatar URL</label>
+                    <input type="text" id="author-avatar" placeholder="e.g. images/author-1.png">
+                </div>
+                <div class="form-group">
+                    <label for="author-bio">Short Bio</label>
+                    <textarea id="author-bio" placeholder="A brief description of the author's expertise..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-full" id="submit-btn" style="width: 100%;">Save Author</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        let currentAuthors = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchAuthors();
+        });
+
+        async function fetchAuthors() {
+            const loading = document.getElementById('loading-state');
+            const list = document.getElementById('authors-list');
+            
+            const { data, error } = await supabase
+                .from('authors')
+                .select('*')
+                .order('name');
+
+            loading.style.display = 'none';
+
+            if (error) {
+                list.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #ef4444;">Error: ${error.message}</td></tr>`;
+                return;
+            }
+
+            currentAuthors = data;
+            renderAuthorsTable(data);
+        }
+
+        function renderAuthorsTable(authors) {
+            const list = document.getElementById('authors-list');
+            if (authors.length === 0) {
+                list.innerHTML = `<tr><td colspan="5" style="text-align:center;">No authors found.</td></tr>`;
+                return;
+            }
+
+            list.innerHTML = authors.map(author => `
+                <tr>
+                    <td>
+                        <div class="author-info">
+                            <img src="${author.avatar_url || '../images/author-1.png'}" alt="${author.name}">
+                            <span class="author-name">${author.name}</span>
+                        </div>
+                    </td>
+                    <td><span class="author-role-label">${author.role || 'Contributor'}</span></td>
+                    <td title="${author.bio}">${author.bio ? author.bio.substring(0, 50) + '...' : 'No bio provided'}</td>
+                    <td style="font-size: 0.8rem; color: var(--text-secondary);">${new Date(author.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="action-btn" onclick="editAuthor('${author.id}')" title="Edit"><i class="ph ph-pencil-simple"></i></button>
+                            <button class="action-btn delete" onclick="deleteAuthor('${author.id}')" title="Delete"><i class="ph ph-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function handleAuthorSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('author-id').value;
+            const authorData = {
+                name: document.getElementById('author-name').value,
+                role: document.getElementById('author-role').value,
+                avatar_url: document.getElementById('author-avatar').value,
+                bio: document.getElementById('author-bio').value
+            };
+
+            let result;
+            if (id) {
+                result = await supabase.from('authors').update(authorData).eq('id', id);
+            } else {
+                result = await supabase.from('authors').insert([authorData]);
+            }
+
+            if (result.error) {
+                alert('Error: ' + result.error.message);
+                return;
+            }
+
+            closeAuthorModal();
+            fetchAuthors();
+        }
+
+        window.openAuthorModal = function(id = null) {
+            const modal = document.getElementById('author-modal');
+            const title = document.getElementById('modal-title');
+            const submitBtn = document.getElementById('submit-btn');
+            const form = document.getElementById('author-form');
+            
+            form.reset();
+            document.getElementById('author-id').value = id || '';
+            
+            if (id) {
+                const author = currentAuthors.find(a => a.id === id);
+                if (author) {
+                    title.textContent = 'Edit Author';
+                    submitBtn.textContent = 'Update Author';
+                    document.getElementById('author-name').value = author.name;
+                    document.getElementById('author-role').value = author.role;
+                    document.getElementById('author-avatar').value = author.avatar_url;
+                    document.getElementById('author-bio').value = author.bio;
+                }
+            } else {
+                title.textContent = 'Add New Author';
+                submitBtn.textContent = 'Save Author';
+            }
+            
+            modal.classList.add('active');
+        };
+
+        window.closeAuthorModal = function() {
+            document.getElementById('author-modal').classList.remove('active');
+        };
+
+        window.editAuthor = function(id) {
+            window.openAuthorModal(id);
+        };
+
+        window.deleteAuthor = async function(id) {
+            if (!confirm('Are you sure you want to delete this author? This will set author references in articles to null.')) return;
+            
+            const { error } = await supabase.from('authors').delete().eq('id', id);
+            if (error) {
+                alert('Error: ' + error.message);
+                return;
+            }
+            fetchAuthors();
+        };
+
+        window.handleLogout = async function() {
+            await supabase.auth.signOut();
+            window.location.href = './';
+        };
+    </script>
+</body>
+</html>
