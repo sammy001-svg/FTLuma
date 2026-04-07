@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Supabase Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <h1>Supabase Connection Test</h1>
+    <div id="status">Connecting...</div>
+    <ul id="list"></ul>
+
+    <script>
+        const SUPABASE_URL = 'https://vkoozoumepnvstljmley.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrb296b3VtZXBudnN0bGptbGV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzOTg1NDYsImV4cCI6MjA5MDk3NDU0Nn0.jexzMstXr6HU_Wa6p1HsQ2qNd5GT3f-QJqdO1SqXRsA';
+
+        async function test() {
+            const status = document.getElementById('status');
+            const list = document.getElementById('list');
+            
+            try {
+                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                status.innerText = "Querying database...";
+                
+                const { data, error } = await supabase.from('articles').select('title, status');
+                
+                if (error) {
+                    status.innerText = "Error: " + error.message;
+                    return;
+                }
+                
+                status.innerText = "Found " + data.length + " articles!";
+                data.forEach(p => {
+                    const li = document.createElement('li');
+                    li.innerText = p.title + " (" + p.status + ")";
+                    list.appendChild(li);
+                });
+            } catch (e) {
+                status.innerText = "Crash: " + e.message;
+            }
+        }
+        
+        test();
+    </script>
+</body>
+</html>

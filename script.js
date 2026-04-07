@@ -2,6 +2,26 @@
  * FTLuma Blog - Main JavaScript File
  */
 
+// --- Supabase Configuration ---
+const SUPABASE_URL = 'https://vkoozoumepnvstljmley.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrb296b3VtZXBudnN0bGptbGV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzOTg1NDYsImV4cCI6MjA5MDk3NDU0Nn0.jexzMstXr6HU_Wa6p1HsQ2qNd5GT3f-QJqdO1SqXRsA';
+
+let supabase = null;
+
+function initSupabase() {
+    if (typeof window !== 'undefined' && window.supabase && window.supabase.createClient) {
+        const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        supabase = client;
+        window.supabase = client; // Expose globally for other scripts
+        console.log('FTLuma: Supabase client initialized');
+        return true;
+    }
+    console.error('FTLuma: Supabase library not found');
+    return false;
+}
+
+console.log('FTLuma: script.js starting');
+
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -174,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
     // Initialize Features
-    if (typeof supabase !== 'undefined') {
+    if (initSupabase()) {
         applySiteSettings();
         renderSupabaseArticles();
         initSubscription();
@@ -345,22 +365,18 @@ async function renderSupabaseArticles() {
 
     if (!postGrid && !heroInfo && !articlesHubGrid) return;
 
-    // Fetch articles with joins
-    const authorId = urlParams.get('author');
+    // Fetch articles with joins - Simplified for debug
     let query = supabase
         .from('articles')
-        .select(`
-            *,
-            categories(name),
-            authors(*)
-        `)
-        .order('created_at', { ascending: false }); // Order by created_at for debug
-
-    if (authorId) {
-        query = query.eq('author_id', authorId);
-    }
+        .select(`*, categories(name), authors(name)`)
+        .order('created_at', { ascending: false });
 
     const { data: allPosts, error } = await query;
+    
+    // Physical alert for undeniable feedback
+    if (allPosts) {
+        alert('DEBUG: script.js found ' + allPosts.length + ' articles in the database.');
+    }
 
     if (error) {
         console.error('Error fetching articles:', error);

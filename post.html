@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      window.onerror = function(msg, url, line, col, error) {
+        alert("CRITICAL ERROR: " + msg + "\nAt: " + url + ":" + line + ":" + col);
+        return false;
+      };
+    </script>
     <title id="page-title">Article Title | FTLuma</title>
     <meta name="description" id="page-description" content="Article description." />
     <!-- Google Fonts -->
@@ -12,7 +18,6 @@
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script type="module" src="supabase-config.js"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -154,6 +159,7 @@
       </div>
     </div>
 
-    <script type="module" src="script.js"></script>
+    <!-- Unified Script -->
+    <script src="ftluma-main.js"></script>
   </body>
 </html>
