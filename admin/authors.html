@@ -15,8 +15,8 @@
         (async () => {
             try {
                 const { data: { session }, error } = await supabase.auth.getSession();
-                if (!session || error) window.location.href = './';
-            } catch (err) { window.location.href = './'; }
+                if (!session || error) window.location.href = '/admin';
+            } catch (err) { window.location.href = '/admin'; }
         })();
     </script>
     <style>
@@ -47,7 +47,7 @@
         .action-btn.delete:hover { border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.05); }
 
         /* Modal Styles */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-overlay.active { display: flex; }
         .modal-content { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 20px; padding: 2.5rem; width: 500px; max-width: 90%; position: relative; }
         .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.5rem; }
@@ -72,18 +72,18 @@
 <body>
     <div class="admin-layout">
         <aside class="admin-sidebar">
-            <a href="../index.html" class="logo">FTLuma<span class="dot">.</span></a>
+            <a href="/" class="logo">FTLuma<span class="dot">.</span></a>
             <nav class="admin-nav">
-                <a href="articles" class="admin-nav-link">
+                <a href="/admin/articles" class="admin-nav-link">
                     <i class="ph ph-article"></i> All Articles
                 </a>
-                <a href="dashboard" class="admin-nav-link">
+                <a href="/admin/dashboard" class="admin-nav-link">
                     <i class="ph ph-plus-circle"></i> New Article
                 </a>
-                <a href="authors" class="admin-nav-link active">
+                <a href="/admin/authors" class="admin-nav-link active">
                     <i class="ph ph-users"></i> Authors
                 </a>
-                <a href="settings" class="admin-nav-link">
+                <a href="/admin/settings" class="admin-nav-link">
                     <i class="ph ph-gear"></i> Settings
                 </a>
                 <a href="#" class="admin-nav-link">
@@ -160,7 +160,7 @@
                     <label for="author-bio">Short Bio</label>
                     <textarea id="author-bio" placeholder="A brief description of the author's expertise..."></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary w-full" id="submit-btn" style="width: 100%;">Save Author</button>
+                <button type="submit" class="btn btn-primary w-full" id="submit-btn" >Save Author</button>
             </form>
         </div>
     </div>
@@ -358,7 +358,7 @@
 
         window.handleLogout = async function() {
             await supabase.auth.signOut();
-            window.location.href = './';
+            window.location.href = '/admin';
         };
 
         window.handleAuthorSubmit = handleAuthorSubmit;

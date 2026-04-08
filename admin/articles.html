@@ -81,6 +81,8 @@
         .loading-icon { font-size: 2rem; }
         .loading-text { margin-top: 1rem; }
         .empty-state-btn { margin-top: 1.5rem; display: inline-block; text-decoration: none; }
+        .btn-danger { background: #ef4444; border-color: #ef4444; }
+        .btn-danger:hover { background: #dc2626; border-color: #dc2626; }
 
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
@@ -88,18 +90,18 @@
 <body>
     <div class="admin-layout">
         <aside class="admin-sidebar">
-            <a href="../index.html" class="logo">FTLuma<span class="dot">.</span></a>
+            <a href="/" class="logo">FTLuma<span class="dot">.</span></a>
             <nav class="admin-nav">
-                <a href="articles" class="admin-nav-link active">
+                <a href="/admin/articles" class="admin-nav-link active">
                     <i class="ph ph-article"></i> All Articles
                 </a>
-                <a href="dashboard" class="admin-nav-link">
+                <a href="/admin/dashboard" class="admin-nav-link">
                     <i class="ph ph-plus-circle"></i> New Article
                 </a>
-                <a href="authors" class="admin-nav-link">
+                <a href="/admin/authors" class="admin-nav-link">
                     <i class="ph ph-users"></i> Authors
                 </a>
-                <a href="settings" class="admin-nav-link">
+                <a href="/admin/settings" class="admin-nav-link">
                     <i class="ph ph-gear"></i> Settings
                 </a>
                 <a href="#" onclick="handleLogout()" class="admin-nav-link logout">
@@ -114,7 +116,7 @@
                     <h1 class="admin-title">Articles</h1>
                     <p>Manage and publish your financial insights.</p>
                 </div>
-                <a href="dashboard" class="btn btn-primary">
+                <a href="/admin/dashboard" class="btn btn-primary">
                     <i class="ph ph-plus"></i> New Article
                 </a>
             </header>
@@ -136,7 +138,7 @@
             <p class="modal-text">This action is permanent and cannot be undone. Are you sure you want to remove this insight?</p>
             <div class="modal-actions">
                 <button class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
-                <button class="btn btn-primary" id="confirm-delete-btn" style="background: #ef4444; border-color: #ef4444;">Delete Now</button>
+                <button class="btn btn-primary btn-danger" id="confirm-delete-btn">Delete Now</button>
             </div>
         </div>
     </div>
@@ -147,7 +149,7 @@
     <script type="module">
         async function handleLogout() {
             await supabase.auth.signOut();
-            window.location.href = './';
+            window.location.href = '/admin';
         }
 
         async function fetchArticles() {

@@ -141,6 +141,21 @@
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 0.75rem;
         }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox-group input {
+            width: auto !important;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0 !important;
+        }
         #success-msg {
             display: none;
             padding: 1.25rem;
@@ -322,7 +337,7 @@
     <!-- Admin Mobile Header -->
     <header class="admin-mobile-header glass-panel d-none">
         <div class="container mobile-header-content">
-            <a href="../index.html" class="logo">FTLuma<span class="dot">.</span></a>
+            <a href="/" class="logo">FTLuma<span class="dot">.</span></a>
             <div class="mobile-header-actions">
                 <a href="#" onclick="handleLogout()" class="icon-btn text-danger" aria-label="Logout"><i class="ph ph-sign-out"></i></a>
             </div>
@@ -331,18 +346,18 @@
 
     <div class="admin-layout">
         <aside class="admin-sidebar">
-            <a href="../index.html" class="logo">FTLuma<span class="dot">.</span></a>
+            <a href="/" class="logo">FTLuma<span class="dot">.</span></a>
             <nav class="admin-nav">
-                <a href="articles" class="admin-nav-link">
+                <a href="/admin/articles" class="admin-nav-link">
                     <i class="ph ph-article"></i> All Articles
                 </a>
-                <a href="dashboard" class="admin-nav-link active">
+                <a href="/admin/dashboard" class="admin-nav-link active">
                     <i class="ph ph-plus-circle"></i> New Article
                 </a>
-                <a href="authors" class="admin-nav-link">
+                <a href="/admin/authors" class="admin-nav-link">
                     <i class="ph ph-users"></i> Authors
                 </a>
-                <a href="settings" class="admin-nav-link">
+                <a href="/admin/settings" class="admin-nav-link">
                     <i class="ph ph-gear"></i> Settings
                 </a>
                 <a href="#" class="admin-nav-link">
@@ -407,13 +422,14 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label for="author">Author</label>
                                 <select id="author">
                                     <option value="">Select Author...</option>
                                 </select>
                             </div>
-                            <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                                <input type="checkbox" id="is-featured" style="width: auto;">
-                                <label for="is-featured" style="margin-bottom: 0;">Feature on Home Page</label>
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" id="is-featured">
+                                <label for="is-featured">Feature on Home Page</label>
                             </div>
                             <div class="form-group">
                                 <label for="status">Visibility</label>
@@ -466,7 +482,7 @@
     <script type="module">
         async function handleLogout() {
             await supabase.auth.signOut();
-            window.location.href = './';
+            window.location.href = '/admin';
         }
 
         let currentArticleId = new URLSearchParams(window.location.search).get('edit');
@@ -612,7 +628,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
             setTimeout(() => {
-                window.location.href = 'articles';
+                window.location.href = '/admin/articles';
             }, 2000);
         }
 

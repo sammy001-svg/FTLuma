@@ -11,6 +11,37 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="module" src="supabase-config.js"></script>
     <link rel="stylesheet" href="style.css" />
+    <style>
+      .game-main {
+        padding-top: 120px;
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .game-card {
+        padding: 4rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .game-emoji {
+        font-size: 4rem;
+        margin-bottom: 2rem;
+      }
+      .game-description {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+      }
+      .game-status {
+        background: rgba(0, 255, 163, 0.1);
+        color: var(--color-primary);
+        padding: 0.5rem 1.5rem;
+        border-radius: 2rem;
+        font-weight: 600;
+      }
+    </style>
   </head>
   <body>
     <!-- Background Blobs -->
@@ -21,15 +52,15 @@
     <!-- Navigation -->
     <nav class="navbar glass-effect">
       <div class="container nav-content">
-        <a href="index.html" class="logo">FTLuma<span class="dot">.</span></a>
+        <a href="/" class="logo">FTLuma<span class="dot">.</span></a>
 
         <ul class="nav-links">
-          <li><a href="index">Home</a></li>
-          <li><a href="articles">Articles</a></li>
-          <li><a href="topics">Topics</a></li>
-          <li><a href="events">Upcoming Events</a></li>
-          <li><a href="game" class="active">Game</a></li>
-          <li><a href="about">About</a></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="/articles">Articles</a></li>
+          <li><a href="/topics">Topics</a></li>
+          <li><a href="/events">Upcoming Events</a></li>
+          <li><a href="/game" class="active">Game</a></li>
+          <li><a href="/about">About</a></li>
           <li class="mobile-only"><a href="#" class="subscribe-trigger">Subscribe</a></li>
         </ul>
 
@@ -46,19 +77,19 @@
     </nav>
 
     <!-- Main Content -->
-    <main style="padding-top: 120px; min-height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center;">
+    <main class="game-main">
       <div class="container">
-        <div class="glass-panel" style="padding: 4rem; max-width: 800px; margin: 0 auto;">
-          <div style="font-size: 4rem; margin-bottom: 2rem;">🎮</div>
+        <div class="glass-panel game-card">
+          <div class="game-emoji">🎮</div>
           <h1 class="gradient-text">Upcoming Financial Game</h1>
-          <p style="font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem;">
+          <p class="game-description">
             We're building something exciting! Test your financial intelligence and market strategy in our upcoming interactive experience.
           </p>
           <div class="pulse-container">
-            <span class="status-badge" style="background: rgba(0, 255, 163, 0.1); color: var(--color-primary); padding: 0.5rem 1.5rem; border-radius: 2rem; font-weight: 600;">COMING SOON</span>
+            <span class="status-badge game-status">COMING SOON</span>
           </div>
           <br><br>
-          <a href="index.html" class="btn btn-primary">Back to Home</a>
+          <a href="/" class="btn btn-primary">Back to Home</a>
         </div>
       </div>
     </main>
@@ -66,7 +97,7 @@
     <footer class="site-footer section-padding">
       <div class="container footer-grid">
         <div class="footer-brand">
-          <a href="index" class="logo">FTLuma<span class="dot">.</span></a>
+          <a href="/" class="logo">FTLuma<span class="dot">.</span></a>
           <p>Curating the best insights on global finance, investment strategies, and the future of wealth.</p>
           <div class="social-links">
             <a href="#" class="icon-btn" title="Twitter"><i class="ph ph-twitter-logo"></i></a>
@@ -78,27 +109,27 @@
         <div class="footer-links">
           <h4>Quick Links</h4>
           <ul>
-            <li><a href="index">Home</a></li>
-            <li><a href="articles">Articles</a></li>
-            <li><a href="topics">Topics</a></li>
-            <li><a href="events">Events</a></li>
-            <li><a href="game">Game</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/articles">Articles</a></li>
+            <li><a href="/topics">Topics</a></li>
+            <li><a href="/events">Events</a></li>
+            <li><a href="/game">Game</a></li>
           </ul>
         </div>
         <div class="footer-links">
           <h4>Support</h4>
           <ul>
-            <li><a href="contact">Contact</a></li>
-            <li><a href="about">About Us</a></li>
-            <li><a href="disclaimer">Disclaimer</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/disclaimer">Disclaimer</a></li>
           </ul>
         </div>
 
         <div class="footer-links">
           <h4>Legal</h4>
           <ul>
-            <li><a href="disclaimer">Disclaimer</a></li>
-            <li><a href="contact">Privacy Policy</a></li>
+            <li><a href="/disclaimer">Disclaimer</a></li>
+            <li><a href="/contact">Privacy Policy</a></li>
             <li><a href="#">Terms of Service</a></li>
           </ul>
         </div>
