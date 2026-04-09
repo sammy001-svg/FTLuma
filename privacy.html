@@ -3,12 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FTLuma | Articles Library</title>
+    <title>FTLuma | Privacy Policy</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="supabase-config.js"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -55,27 +56,37 @@
 
     <main class="container">
       <section class="section-padding fade-in">
-        <header class="articles-header text-center-max-800">
-          <span class="tag">Knowledge Hub</span>
-          <h1 class="hero-title">Global Insights Library</h1>
-          <p class="section-subtitle">A curated collection of deep dives, market analysis, and transformative perspectives on the future of wealth.</p>
-          
-          <div class="filters">
-            <button class="filter-btn active">All Insights</button>
-            <button class="filter-btn">Digital Finance</button>
-            <button class="filter-btn">Wealth Management</button>
-            <button class="filter-btn">Market Strategy</button>
-            <button class="filter-btn">Tech Trends</button>
-          </div>
+        <header class="article-header">
+          <span class="tag">Privacy</span>
+          <h1 class="hero-title">Privacy Policy</h1>
+          <p class="section-subtitle">Your privacy and data integrity are our highest priority.</p>
         </header>
 
-        <div class="articles-hub-grid">
-            <!-- Articles will be injected here via script.js -->
-            <div class="loading-placeholder">Fetching the latest library items...</div>
-        </div>
+        <div class="glass-panel article-content legal-panel">
+          <section>
+            <h2>1. Privacy Commitment</h2>
+            <p>FTLuma.com does not collect users' personal information when you visit our website. As a financial practices blog, we are committed to maintaining the highest standards of data integrity and transparency.</p>
+          </section>
 
-        <div class="load-more-container">
-            <button class="btn btn-secondary btn-pill-lg">Load More Articles</button>
+          <section class="legal-section">
+            <h2>2. Cookies and Tracking</h2>
+            <p>We use cookies to enhance your browsing experience. You can manage or disable cookies through your browser settings, though some features of the site may not function correctly without them. These cookies help us understand site traffic and improve our content delivery.</p>
+          </section>
+
+          <section class="legal-section">
+            <h2>3. Third-party Links</h2>
+            <p>Our blog may contain links to external financial tools, resources, or partner sites. Please be aware that we are not responsible for the privacy practices of those third-party websites. We encourage you to read the privacy policies of any external site you visit.</p>
+          </section>
+
+          <section class="legal-section">
+            <h2>4. Contact Us</h2>
+            <p>If you have any questions regarding this privacy policy or our data practices, please contact our privacy team at:</p>
+            <p><strong>Email:</strong> <a href="mailto:info@ftluma-light.com">info@ftluma-light.com</a></p>
+          </section>
+
+          <section class="legal-footer">
+            <p class="legal-update-date">Last Updated: October 2026</p>
+          </section>
         </div>
       </section>
     </main>
@@ -149,7 +160,6 @@
       </div>
     </div>
 
-    <!-- Unified Script -->
-    <script type="module" src="/script.js"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>

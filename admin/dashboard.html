@@ -329,6 +329,14 @@
         .ql-snow .ql-picker { color: var(--text-secondary); }
         .ql-snow.ql-toolbar button:hover .ql-stroke, 
         .ql-snow.ql-toolbar button.ql-active .ql-stroke { stroke: var(--color-primary); }
+
+        /* New Category Form */
+        .category-input-group { display: none; flex-direction: column; gap: 0.75rem; margin-top: 1rem; padding: 1rem; background: rgba(0, 0, 0, 0.2); border-radius: 12px; border: 1px solid var(--border-color); animation: fadeIn 0.3s ease; }
+        .category-input-group.active { display: flex; }
+        .cat-actions { display: flex; gap: 0.5rem; }
+        .cat-actions .btn { flex: 1; padding: 8px; font-size: 0.8rem; }
+        .add-cat-btn { background: none; border: none; color: var(--color-primary); font-size: 0.75rem; font-weight: 600; cursor: pointer; padding: 4px 0; display: flex; align-items: center; gap: 4px; transition: opacity 0.2s; }
+        .add-cat-btn:hover { opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -356,6 +364,9 @@
                 </a>
                 <a href="/admin/authors" class="admin-nav-link">
                     <i class="ph ph-users"></i> Authors
+                </a>
+                <a href="/admin/events" class="admin-nav-link">
+                    <i class="ph ph-calendar"></i> Events
                 </a>
                 <a href="/admin/settings" class="admin-nav-link">
                     <i class="ph ph-gear"></i> Settings
@@ -417,9 +428,21 @@
                         <div class="post-form">
                             <div class="form-group">
                                 <label for="category">Category</label>
-                                <select id="category">
-                                    <option value="">Select Category...</option>
-                                </select>
+                                <div class="cat-select-wrapper">
+                                    <select id="category">
+                                        <option value="">Select Category...</option>
+                                    </select>
+                                    <button type="button" class="add-cat-btn" onclick="toggleNewCategoryForm()">
+                                        <i class="ph ph-plus"></i> Add New Category
+                                    </button>
+                                </div>
+                                <div id="new-category-form" class="category-input-group">
+                                    <input type="text" id="new-category-name" placeholder="Category Name (e.g., Crypto)">
+                                    <div class="cat-actions">
+                                        <button type="button" class="btn btn-outline" onclick="toggleNewCategoryForm()">Cancel</button>
+                                        <button type="button" class="btn btn-primary" onclick="handleCreateCategory()">Create</button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="author">Author</label>
@@ -698,6 +721,61 @@
         document.getElementById('image-url').addEventListener('input', function(e) {
             if (e.target.value) showPreview(e.target.value);
         });
+
+        // ── Dynamic Category Creation ──────────────────────────────────────
+        window.toggleNewCategoryForm = function() {
+            const form = document.getElementById('new-category-form');
+            form.classList.toggle('active');
+            if (form.classList.contains('active')) {
+                document.getElementById('new-category-name').focus();
+            }
+        };
+
+        window.handleCreateCategory = async function() {
+            const name = document.getElementById('new-category-name').value.trim();
+            if (!name) return;
+
+            const btn = document.querySelector('#new-category-form .btn-primary');
+            const originalText = btn.textContent;
+            btn.textContent = '...';
+            btn.disabled = true;
+
+            try {
+                const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+                
+                const { data, error } = await supabase
+                    .from('categories')
+                    .insert([{ name, slug }])
+                    .select()
+                    .single();
+
+                if (error) {
+                    if (error.code === '23505') {
+                        alert('This category already exists.');
+                    } else {
+                        throw error;
+                    }
+                } else {
+                    // Add to dropdown and select
+                    const select = document.getElementById('category');
+                    const opt = document.createElement('option');
+                    opt.value = data.id;
+                    opt.textContent = data.name;
+                    select.appendChild(opt);
+                    select.value = data.id;
+                    
+                    // Clear and hide form
+                    document.getElementById('new-category-name').value = '';
+                    toggleNewCategoryForm();
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Failed to create category: ' + err.message);
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        };
 
         window.handleLogout = handleLogout;
         window.saveDraft = saveDraft;

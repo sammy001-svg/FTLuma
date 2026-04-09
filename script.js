@@ -67,13 +67,31 @@
         const mobileBtn = document.querySelector('.mobile-menu-btn');
         const navLinks  = document.querySelector('.nav-links');
         if (mobileBtn && navLinks) {
-            mobileBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                navLinks.classList.toggle('show');
-                const isShow = navLinks.classList.contains('show');
+            const toggleMenu = (forceClose = false) => {
+                const isShow = forceClose ? false : !navLinks.classList.contains('show');
+                navLinks.classList.toggle('show', isShow);
                 document.body.classList.toggle('no-scroll', isShow);
                 const icon = mobileBtn.querySelector('i');
                 if (icon) icon.className = isShow ? 'ph ph-x' : 'ph ph-list';
+            };
+
+            mobileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleMenu();
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (navLinks.classList.contains('show') && !navLinks.contains(e.target) && !mobileBtn.contains(e.target)) {
+                    toggleMenu(true);
+                }
+            });
+
+            // Close menu when clicking a link
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    toggleMenu(true);
+                });
             });
         }
 

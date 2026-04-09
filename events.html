@@ -15,40 +15,46 @@
       .events-hero {
         position: relative;
         padding: 6rem 0;
-        text-align: center;
-        background: radial-gradient(circle at center, hsla(var(--hue-primary), 70%, 50%, 0.15) 0%, transparent 70%);
+        text-align: left;
+        background: radial-gradient(circle at 20% center, hsla(var(--hue-primary), 70%, 50%, 0.15) 0%, transparent 70%);
       }
-      .countdown-wrapper {
-        display: flex;
-        justify-content: center;
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 2rem;
-        margin-top: 3rem;
+        margin-top: 4rem;
       }
-      .countdown-item {
+      .feature-item {
         background: var(--glass-bg);
         border: 1px solid var(--glass-border);
-        padding: 1.5rem;
+        padding: 2.5rem;
         border-radius: var(--border-radius-md);
-        min-width: 100px;
+        text-align: left;
+        transition: transform var(--transition-normal);
         -webkit-backdrop-filter: blur(12px);
         backdrop-filter: blur(12px);
       }
-      .countdown-number {
-        font-family: var(--font-display);
+      .feature-item:hover {
+        transform: translateY(-5px);
+        border-color: var(--color-primary);
+      }
+      .feature-icon {
         font-size: 2.5rem;
-        font-weight: 700;
         color: var(--color-primary);
-        display: block;
+        margin-bottom: 1.5rem;
+        display: inline-block;
       }
-      .countdown-label {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-        text-transform: uppercase;
-        letter-spacing: 1px;
+      .feature-item h3 {
+        margin-bottom: 1rem;
+        font-family: var(--font-display);
+        color: var(--text-primary);
       }
+      .events-hero .section-subtitle { max-width: 800px; margin: 1.5rem 0; }
+      .events-hero .subtitle-highlight { margin: 1rem 0; color: var(--text-primary); font-weight: 500; }
+      .events-hero .subtitle-small { font-size: 0.95rem; margin: 0; }
       .event-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 2rem;
         margin-top: 4rem;
       }
@@ -134,7 +140,7 @@
           <li><a href="articles">Articles</a></li>
           <li><a href="topics">Topics</a></li>
           <li><a href="events" class="active">Upcoming Events</a></li>
-          <li><a href="game">Game</a></li>
+          <li><a href="game">Brain Break</a></li>
           <li><a href="about">About</a></li>
           <li class="mobile-only"><a href="#" class="subscribe-trigger">Subscribe</a></li>
         </ul>
@@ -153,31 +159,45 @@
 
     <main class="container">
       <section class="events-hero fade-in">
-        <span class="tag">Upcoming Global Summit</span>
-        <h1 class="hero-title">FTLuma Future Finance 2026</h1>
-        <p class="section-subtitle">Join us in Dubai for the most anticipated financial technology conference of the year.</p>
-        
-        <div class="countdown-wrapper" id="countdown">
-          <div class="countdown-item">
-            <span class="countdown-number" id="days">42</span>
-            <span class="countdown-label">Days</span>
+        <span class="tag">Free Training Sessions</span>
+        <h1 class="hero-title">Master Your Financial Journey</h1>
+        <p class="section-subtitle">
+          Mastering the easiest way and best fit for you doesn’t have to be a solo journey. 
+          We, <strong>FTLuma</strong>, are here to help you navigate the evolving financial landscape from the comfort of your home.
+        </p>
+        <p class="section-subtitle subtitle-highlight">
+          We are excited to offer free monthly financial training sessions designed to turn complex concepts into actionable habits.
+        </p>
+        <p class="section-subtitle subtitle-small">
+          Each month, we tackle a high-impact pillar of financial literacy to ensure you stay ahead of market trends and get well established for your journey into adulthood.
+        </p>
+      </section>
+
+      <section class="section-padding fade-in pb-0">
+        <div class="section-header text-center">
+            <h2 class="section-title">What You Get</h2>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-item">
+            <div class="feature-icon"><i class="ph ph-video-camera"></i></div>
+            <h3>Live Workshops</h3>
+            <p>Interactive virtual sessions held during the last week of every month. Practical learning you can use immediately.</p>
           </div>
-          <div class="countdown-item">
-            <span class="countdown-number" id="hours">12</span>
-            <span class="countdown-label">Hours</span>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="ph ph-wrench"></i></div>
+            <h3>Free Interactive Tools</h3>
+            <p>Gain access to our exclusive templates, calculators, and trackers designed to simplify your financial management.</p>
           </div>
-          <div class="countdown-item">
-            <span class="countdown-number" id="minutes">45</span>
-            <span class="countdown-label">Mins</span>
-          </div>
-          <div class="countdown-item">
-            <span class="countdown-number" id="seconds">30</span>
-            <span class="countdown-label">Secs</span>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="ph ph-chat-circle-dots"></i></div>
+            <h3>Expert Q&A</h3>
+            <p>Direct access to financial coaches who will answer your specific questions in real time during every session.</p>
           </div>
         </div>
       </section>
 
-      <section class="section-padding fade-in">
+      <section class="section-padding fade-in pt-1">
         <div class="section-header">
           <div>
             <span class="tag">Event Schedule</span>
@@ -189,48 +209,48 @@
           <!-- Event 1 -->
           <div class="event-card glass-panel">
             <div class="event-card-header">
-              <img src="images/post-hero.png" alt="Summit 2026">
-              <span class="event-date-badge">JUNE 15-17</span>
+              <img src="images/post-hero.png" alt="Financal Reset">
+              <span class="event-date-badge">APR 28</span>
             </div>
             <div class="event-card-body">
               <div class="event-location">
-                <i class="ph ph-map-pin"></i> Museum of the Future, Dubai
+                <i class="ph ph-video-camera"></i> Virtual Session
               </div>
-              <h3>Future Finance Global Summit 2026</h3>
-              <p>The flagship event for the FTLuma community, featuring 50+ speakers on DeFi, CBDCs, and institutional wealth management.</p>
-              <button class="btn btn-primary register-btn">Register for Event</button>
+              <h3>The Financial Reset: Building Your First Budget</h3>
+              <p>Learn how to take control of your cash flow and set realistic goals for the rest of the year.</p>
+              <button class="btn btn-primary register-btn">Register for Free</button>
             </div>
           </div>
 
           <!-- Event 2 -->
           <div class="event-card glass-panel">
             <div class="event-card-header">
-              <img src="images/post-1.png" alt="Wealth Workshop">
-              <span class="event-date-badge">JULY 05</span>
+              <img src="images/post-1.png" alt="Investment Foundations">
+              <span class="event-date-badge">MAY 26</span>
             </div>
             <div class="event-card-body">
               <div class="event-location">
-                <i class="ph ph-video-camera"></i> Virtual Workshop
+                <i class="ph ph-video-camera"></i> Virtual Session
               </div>
-              <h3>Next-Gen Wealth Strategy Workshop</h3>
-              <p>An interactive digital session focused on building hybrid portfolio models combining traditional and digital assets.</p>
-              <button class="btn btn-primary register-btn">Claim Free Ticket</button>
+              <h3>Investment Foundations: Beyond the Basics</h3>
+              <p>An simple guide to understanding stocks, bonds, and diversifying your portfolio safely.</p>
+              <button class="btn btn-primary register-btn">Save My Spot</button>
             </div>
           </div>
 
           <!-- Event 3 -->
           <div class="event-card glass-panel">
             <div class="event-card-header">
-              <img src="images/post-2.png" alt="Crypto Insights">
-              <span class="event-date-badge">AUG 22</span>
+              <img src="images/post-2.png" alt="Tax Essentials">
+              <span class="event-date-badge">JUN 30</span>
             </div>
             <div class="event-card-body">
               <div class="event-location">
-                <i class="ph ph-map-pin"></i> Marina Bay Sands, Singapore
+                <i class="ph ph-video-camera"></i> Virtual Session
               </div>
-              <h3>Institutional Crypto Integration Forum</h3>
-              <p>Bringing together banking leaders and digital asset pioneers to discuss regulatory frameworks and liquidity solutions.</p>
-              <button class="btn btn-primary register-btn">Register for Event</button>
+              <h3>Tax Essentials for Modern Careers</h3>
+              <p>Demystifying taxes for freelancers, remote workers, and young professionals entering the workforce.</p>
+              <button class="btn btn-primary register-btn">Register for Free</button>
             </div>
           </div>
         </div>
@@ -243,9 +263,9 @@
           <a href="/" class="logo">FTLuma<span class="dot">.</span></a>
           <p>Curating the best insights on global finance, investment strategies, and the future of wealth.</p>
           <div class="social-links">
-            <a href="#" class="icon-btn" title="Twitter"><i class="ph ph-twitter-logo"></i></a>
-            <a href="#" class="icon-btn" title="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>
-            <a href="#" class="icon-btn" title="GitHub"><i class="ph ph-github-logo"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=61588350584922" class="icon-btn" title="Facebook" target="_blank" rel="noopener"><i class="ph ph-facebook-logo"></i></a>
+            <a href="https://www.linkedin.com/in/ftluma-light-b157803b2" class="icon-btn" title="LinkedIn" target="_blank" rel="noopener"><i class="ph ph-linkedin-logo"></i></a>
+            <a href="https://www.instagram.com/ftluma_light/" class="icon-btn" title="Instagram" target="_blank" rel="noopener"><i class="ph ph-instagram-logo"></i></a>
           </div>
         </div>
 
@@ -256,7 +276,7 @@
             <li><a href="/articles">Articles</a></li>
             <li><a href="/topics">Topics</a></li>
             <li><a href="/events">Events</a></li>
-            <li><a href="/game">Game</a></li>
+            <li><a href="/game">Brain Break</a></li>
           </ul>
         </div>
         <div class="footer-links">
@@ -272,7 +292,7 @@
           <h4>Legal</h4>
           <ul>
             <li><a href="/disclaimer">Disclaimer</a></li>
-            <li><a href="/contact">Privacy Policy</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
             <li><a href="#">Terms of Service</a></li>
           </ul>
         </div>
@@ -283,29 +303,5 @@
     </footer>
 
     <script type="module" src="script.js"></script>
-    <script>
-      // Simple Countdown Logic
-      const targetDate = new Date("June 15, 2026 09:00:00").getTime();
-      
-      const countdown = setInterval(function() {
-        const now = new Date().getTime();
-        const distance = targetDate - now;
-
-        const d = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((distance % (1000 * 60)) / 1000);
-
-        document.getElementById("days").innerHTML = d;
-        document.getElementById("hours").innerHTML = h;
-        document.getElementById("minutes").innerHTML = m;
-        document.getElementById("seconds").innerHTML = s;
-
-        if (distance < 0) {
-          clearInterval(countdown);
-          document.getElementById("countdown").innerHTML = "EVENT LIVE";
-        }
-      }, 1000);
-    </script>
   </body>
 </html>
