@@ -116,15 +116,41 @@
         
         if (!target && !document.getElementById('hero-carousel-track')) return;
 
-        console.log('FTLuma: Fetching articles...');
-        const { data: posts, error } = await supabase
-            .from('articles')
-            .select('*, categories(name), authors(name, avatar_url)')
-            .order('created_at', { ascending: false });
+        let posts = null;
 
-        if (error || !posts) {
-            if (target) target.innerHTML = `<div class="error-msg">Unable to load insights right now.</div>`;
-            return;
+        // Try to load from session cache first for speed
+        try {
+            const cached = sessionStorage.getItem('ftluma_posts_cache');
+            if (cached) {
+                const { timestamp, data } = JSON.parse(cached);
+                // Cache valid for 5 minutes
+                if (Date.now() - timestamp < 5 * 60 * 1000) {
+                    console.log('FTLuma: Loading articles from cache');
+                    posts = data;
+                }
+            }
+        } catch (e) { console.warn('Cache load failed', e); }
+
+        if (!posts) {
+            console.log('FTLuma: Fetching articles from database...');
+            const { data, error } = await supabase
+                .from('articles')
+                .select('id, title, slug, excerpt, featured_image, status, read_time, published_at, created_at, categories(name), authors(name, avatar_url)')
+                .order('created_at', { ascending: false });
+
+            if (error || !data) {
+                if (target) target.innerHTML = `<div class="error-msg">Unable to load insights right now.</div>`;
+                return;
+            }
+            posts = data;
+
+            // Save to cache
+            try {
+                sessionStorage.setItem('ftluma_posts_cache', JSON.stringify({
+                    timestamp: Date.now(),
+                    data: posts
+                }));
+            } catch (e) { console.warn('Cache save failed', e); }
         }
 
         // Handle Hero Carousel
